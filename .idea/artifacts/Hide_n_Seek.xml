@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Hide_n_Seek">
+    <output-path>$PROJECT_DIR$/out/artifacts/Hide_n_Seek</output-path>
+    <root id="archive" name="HidenSeek.jar">
+      <element id="module-output" name="Hide_n_Seek" />
+    </root>
+  </artifact>
+</component>

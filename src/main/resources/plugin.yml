@@ -1,0 +1,20 @@
+name: Hide_n_Seek
+version: '${project.version}'
+main: bagel.builds.hide_n_seek.Main
+api-version: '1.19'
+commands:
+  nightvision:
+    description: Toggles nightvision for command sender.
+    aliases: nv
+    permission: nightvision
+  sit:
+    permission: sit
+    description: Sits player on ground
+  speed:
+    description: Sets player speed (0-20)
+    permission: speed
+  hat:
+    description: Open hat GUI
+    permission: hat
+  gui:
+    permission: gui
