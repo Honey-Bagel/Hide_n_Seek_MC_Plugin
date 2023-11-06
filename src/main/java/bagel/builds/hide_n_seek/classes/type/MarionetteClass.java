@@ -74,6 +74,7 @@ public class MarionetteClass extends ClassType{
         }
 
         if(e.getPlayer().equals(player) && player.getInventory().getItemInMainHand().equals(MItem) && ( e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR) ) && e.getHand().equals(EquipmentSlot.HAND)) {
+            e.setCancelled(true);
             if(!cooldown.asMap().containsKey(player.getUniqueId())) {
                 new MarionetteTask(main.getGameManager(), hiders);
 

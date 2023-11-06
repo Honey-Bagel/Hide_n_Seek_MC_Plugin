@@ -4,10 +4,7 @@ import bagel.builds.hide_n_seek.Main;
 import bagel.builds.hide_n_seek.classes.Animatronic;
 import bagel.builds.hide_n_seek.classes.Hider;
 import bagel.builds.hide_n_seek.classes.Team;
-import bagel.builds.hide_n_seek.classes.type.BonnieClass;
-import bagel.builds.hide_n_seek.classes.type.ClassType;
-import bagel.builds.hide_n_seek.classes.type.FoxyClass;
-import bagel.builds.hide_n_seek.classes.type.MangleClass;
+import bagel.builds.hide_n_seek.classes.type.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -70,6 +67,9 @@ public class GameManager {
             classtypes.get(player.getUniqueId()).start();
         } else if(animatronic.equals(Animatronic.BONNIE)) {
             classtypes.put(player.getUniqueId(), new BonnieClass(main, animatronic, player.getUniqueId()));
+            classtypes.get(player.getUniqueId()).start();
+        } else if(animatronic.equals(Animatronic.MARIONETTE)) {
+            classtypes.put(player.getUniqueId(), new MarionetteClass(main, animatronic, player.getUniqueId()));
             classtypes.get(player.getUniqueId()).start();
         }
     }

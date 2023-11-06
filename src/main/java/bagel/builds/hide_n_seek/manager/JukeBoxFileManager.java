@@ -22,7 +22,6 @@ public class JukeBoxFileManager {
         this.file = new File(main.getDataFolder(), "music-boxes.yml");
         this.boxLoc = YamlConfiguration.loadConfiguration(file);
         this.boxLoc.options().copyDefaults(true);
-        this.boxLoc.addDefault("locations", true);
         saveConfig();
     }
 
