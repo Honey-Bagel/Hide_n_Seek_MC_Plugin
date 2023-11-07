@@ -40,9 +40,6 @@ public final class Main extends JavaPlugin {
         getCommand("vent").setExecutor(new TestCommand(this));
 
         Bukkit.getPluginManager().registerEvents(new GameListener(this, gameManager), this);
-        Bukkit.getPluginManager().registerEvents(new TempMarionetteBoxHandler(this), this);
-
-        new TempMarionetteBoxHandler(this);
     }
 
 

@@ -22,6 +22,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,12 @@ public class MarionetteClass extends ClassType{
     public void start() {
 
         this.mbhandler = new TempMarionetteBoxHandler(main);
-        mbhandler.getLocations();
+        try {
+            mbhandler.fileStart();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        this.locations = mbhandler.getLocations();
 
         this.MItem = new ItemStack(Material.JUKEBOX);
         ItemMeta mMeta = MItem.getItemMeta();
@@ -79,7 +85,7 @@ public class MarionetteClass extends ClassType{
         if(e.getPlayer().equals(player) && player.getInventory().getItemInMainHand().equals(MItem) && ( e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR) ) && e.getHand().equals(EquipmentSlot.HAND)) {
             e.setCancelled(true);
             if(!cooldown.asMap().containsKey(player.getUniqueId())) {
-                new MarionetteTask(main.getGameManager(), hiders, locations);
+                new MarionetteTask(main, hiders, locations);
 
                 cooldown.put(player.getUniqueId(), System.currentTimeMillis() + 120000);
             } else {
