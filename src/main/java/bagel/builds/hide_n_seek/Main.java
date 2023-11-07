@@ -40,8 +40,9 @@ public final class Main extends JavaPlugin {
         getCommand("vent").setExecutor(new TestCommand(this));
 
         Bukkit.getPluginManager().registerEvents(new GameListener(this, gameManager), this);
-        Bukkit.getPluginManager().registerEvents(new TempMarionetteBoxHandler(this, gameManager), this);
+        Bukkit.getPluginManager().registerEvents(new TempMarionetteBoxHandler(this), this);
 
+        new TempMarionetteBoxHandler(this);
     }
 
 
@@ -50,13 +51,6 @@ public final class Main extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-    private void initiateFile(String name) throws Exception {
-        File file = new File(getDataFolder(), name);
-        if(!file.exists()) {
-            file.createNewFile();
-        }
-        YamlConfiguration modifyFile = YamlConfiguration.loadConfiguration(file);
-    }
 
     public GameManager getGameManager() { return gameManager; }
 }

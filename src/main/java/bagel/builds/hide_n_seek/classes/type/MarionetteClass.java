@@ -12,6 +12,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,6 +36,7 @@ public class MarionetteClass extends ClassType{
     private List<Player> hiders;
     private Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(120, TimeUnit.SECONDS).build();
     private TempMarionetteBoxHandler mbhandler;
+    private List<Location> locations;
 
     public MarionetteClass(Main main, Animatronic animatronic, UUID uuid) {
         super(main, Animatronic.MARIONETTE, uuid);
@@ -45,7 +47,8 @@ public class MarionetteClass extends ClassType{
     @Override
     public void start() {
 
-        this.mbhandler = new TempMarionetteBoxHandler(main, main.getGameManager());
+        this.mbhandler = new TempMarionetteBoxHandler(main);
+        mbhandler.getLocations();
 
         this.MItem = new ItemStack(Material.JUKEBOX);
         ItemMeta mMeta = MItem.getItemMeta();
@@ -76,7 +79,7 @@ public class MarionetteClass extends ClassType{
         if(e.getPlayer().equals(player) && player.getInventory().getItemInMainHand().equals(MItem) && ( e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR) ) && e.getHand().equals(EquipmentSlot.HAND)) {
             e.setCancelled(true);
             if(!cooldown.asMap().containsKey(player.getUniqueId())) {
-                new MarionetteTask(main.getGameManager(), hiders);
+                new MarionetteTask(main.getGameManager(), hiders, locations);
 
                 cooldown.put(player.getUniqueId(), System.currentTimeMillis() + 120000);
             } else {
