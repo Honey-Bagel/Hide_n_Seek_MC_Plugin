@@ -1,6 +1,7 @@
 package bagel.builds.hide_n_seek.listener.misc;
 
 import bagel.builds.hide_n_seek.Main;
+import bagel.builds.hide_n_seek.classes.type.FoxyClass;
 import bagel.builds.hide_n_seek.event.VentEvent;
 import bagel.builds.hide_n_seek.classes.Animatronic;
 import org.bukkit.Bukkit;
@@ -78,7 +79,7 @@ public class VentHandler implements Listener {
             if (!(main.getGameManager().getAnimatronic(e.getPlayer()) == Animatronic.MANGLE)) {
                 if (e.getInVent()) {
                     e.getPlayer().setWalkSpeed(0.5f);
-                } else if(main.getGameManager().getAnimatronicsMap().containsKey(e.getPlayer().getUniqueId()) && main.getGameManager().getAnimatronic(e.getPlayer()).equals(Animatronic.FOXY)) {
+                } else if(main.getGameManager().getAnimatronicsMap().containsKey(e.getPlayer().getUniqueId()) && main.getGameManager().getAnimatronic(e.getPlayer()).equals(Animatronic.FOXY) && main.getGameManager().getClasstypes().get(e.getPlayer().getUniqueId()).equals(Animatronic.FOXY) && FoxyClass.getRunning()) {
                     e.getPlayer().setWalkSpeed(0.4f);
                 } else {
                     e.getPlayer().setWalkSpeed(0.2f);

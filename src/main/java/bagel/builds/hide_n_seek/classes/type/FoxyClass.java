@@ -17,6 +17,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -35,9 +36,10 @@ public class FoxyClass extends ClassType{
     private Main main;
     private UUID uuid;
     private Player player;
-    private Boolean running;
+    private static Boolean running;
     private ItemStack FItem;
     private Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).build();
+    private BukkitTask task;
 
     public FoxyClass(Main main, Animatronic animatronic, UUID uuid) {
         super(main, Animatronic.FOXY, uuid);
@@ -68,6 +70,7 @@ public class FoxyClass extends ClassType{
         if(player.getInventory().contains(FItem)) {
             player.getInventory().remove(FItem);
         }
+        task.cancel();
         super.remove();
     }
 
@@ -87,8 +90,9 @@ public class FoxyClass extends ClassType{
                 } else {
                     player.setWalkSpeed(0.6f);
                 }
+                running = true;
                 AtomicInteger atomint = new AtomicInteger(15);
-                BukkitTask task = Bukkit.getScheduler().runTaskTimer(main, () -> {
+                task = Bukkit.getScheduler().runTaskTimer(main, () -> {
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§f " + atomint.getAndDecrement() + " sprint time left." ));
                 }, 0, 20);
 
@@ -134,6 +138,17 @@ public class FoxyClass extends ClassType{
             }
         }
         return false;
+    }
+
+    @EventHandler
+    public void onDropItem(PlayerDropItemEvent e) {
+        if(e.getItemDrop().equals(FItem)) {
+            e.setCancelled(true);
+        }
+    }
+
+    public static boolean getRunning() {
+        return running;
     }
 
 }

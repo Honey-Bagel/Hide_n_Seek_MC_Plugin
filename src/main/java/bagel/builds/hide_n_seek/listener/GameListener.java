@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class GameListener implements Listener {
 
@@ -26,6 +27,16 @@ public class GameListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         main.getGameManager().addPlayer(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        Player player = e.getPlayer();
+        if(gameManager.getTeams().get(player.getUniqueId()).equals(Team.ANIMATRONIC)) {
+            gameManager.removeAnimatronic(player);
+        } else if(gameManager.getTeams().get(player.getUniqueId()).equals(Team.HIDER)) {
+            gameManager.removeHider(player);
+        }
     }
 
 

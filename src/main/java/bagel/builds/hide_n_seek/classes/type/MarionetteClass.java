@@ -17,16 +17,15 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class MarionetteClass extends ClassType{
@@ -34,10 +33,10 @@ public class MarionetteClass extends ClassType{
     private Main main;
     private Player player;
     private ItemStack MItem;
-    private List<Player> hiders;
-    private Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(120, TimeUnit.SECONDS).build();
+    private Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(80, TimeUnit.SECONDS).build();
     private TempMarionetteBoxHandler mbhandler;
     private List<Location> locations;
+    private static boolean activeTask = false;
 
     public MarionetteClass(Main main, Animatronic animatronic, UUID uuid) {
         super(main, Animatronic.MARIONETTE, uuid);
@@ -78,20 +77,41 @@ public class MarionetteClass extends ClassType{
 
     @EventHandler
     public void onItemUse(PlayerInteractEvent e) {
-        for(UUID uuid : main.getGameManager().getHiderMap().keySet()) {
-            hiders.add(Bukkit.getPlayer(uuid));
-        }
 
-        if(e.getPlayer().equals(player) && player.getInventory().getItemInMainHand().equals(MItem) && ( e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR) ) && e.getHand().equals(EquipmentSlot.HAND)) {
-            e.setCancelled(true);
-            if(!cooldown.asMap().containsKey(player.getUniqueId())) {
-                new MarionetteTask(main, hiders, locations, player, this);
+            if (e.getPlayer().equals(player) && player.getInventory().getItemInMainHand().equals(MItem) && (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR)) && e.getHand().equals(EquipmentSlot.HAND) && !activeTask) {
+                e.setCancelled(true);
+                if (!cooldown.asMap().containsKey(player.getUniqueId())) {
+                    new MarionetteTask(main, locations, player, this);
 
-                cooldown.put(player.getUniqueId(), System.currentTimeMillis() + 120000);
+                } else {
+                    long distance = cooldown.asMap().get(player.getUniqueId()) - System.currentTimeMillis();
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§4You must wait " + "§f" + TimeUnit.MILLISECONDS.toSeconds(distance) + "§4 seconds to use this."));
+                }
             } else {
-                long distance = cooldown.asMap().get(player.getUniqueId()) - System.currentTimeMillis();
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§4You must wait " + "§f" + TimeUnit.MILLISECONDS.toSeconds(distance) + "§4 seconds to use this."));
-            }
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§4You already have an active ability."));
+        }
+    }
+
+    @EventHandler
+    public void onDropItem(PlayerDropItemEvent e) {
+        if(e.getItemDrop().equals(MItem)) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent e) {
+        if(e.getItemInHand().equals(MItem)) {
+            e.setBuild(false);
+        }
+    }
+
+    public void setActiveTask(boolean active) {
+        if(active) {
+            activeTask = true;
+        } else {
+            activeTask = false;
+            cooldown.put(player.getUniqueId(), System.currentTimeMillis() + 80000);
         }
     }
 }

@@ -26,7 +26,7 @@ public class MProgressDown extends BukkitRunnable {
     public void run() {
         if(!mtask.isWinding()) {
             double temp = mtask.decrementProgress();
-            player.sendMessage(ChatColor.RED + "Decrease: " + temp);
+            mtask.setBarProgress(temp);
             if(temp <= 0) {
                 mtask.end(false);
             }

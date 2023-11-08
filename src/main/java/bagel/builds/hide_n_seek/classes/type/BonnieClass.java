@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +31,7 @@ public class BonnieClass extends ClassType{
     private Player player;
     private ItemStack BItem;
     private Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(25, TimeUnit.SECONDS).build();
+    private BonnieGlow Btask;
 
     public BonnieClass(Main main, Animatronic animatronic, UUID uuid) {
         super(main, Animatronic.BONNIE, uuid);
@@ -54,6 +56,7 @@ public class BonnieClass extends ClassType{
         if(player.getInventory().contains(BItem)) {
             player.getInventory().remove(BItem);
         }
+        Btask.cancel();
         super.remove();
     }
 
@@ -63,7 +66,8 @@ public class BonnieClass extends ClassType{
 
         if (e.getPlayer().equals(player) && player.getInventory().getItemInMainHand().equals(BItem) && ( e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR) ) && e.getHand().equals(EquipmentSlot.HAND)) {
             if(!cooldown.asMap().containsKey(player.getUniqueId())) {
-                new BonnieGlow(main, player).start();
+                Btask = new BonnieGlow(main, player);
+                Btask.start();
                 cooldown.put(player.getUniqueId(), System.currentTimeMillis() + 25000);
             } else {
                 long distance = cooldown.asMap().get(player.getUniqueId()) - System.currentTimeMillis();

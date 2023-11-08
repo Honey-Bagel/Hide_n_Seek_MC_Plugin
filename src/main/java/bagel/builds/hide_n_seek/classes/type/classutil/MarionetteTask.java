@@ -13,6 +13,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -20,6 +23,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -32,40 +36,66 @@ public class MarionetteTask implements Listener {
 
     private Main main;
     private MarionetteClass mClass;
-    private HashMap<UUID, Long> playersWinding;
-    private List<Player> hiders;
-    private List<Location> locations;
-    private static final double startPercent = 20;
-    private double progress;
     private MProgressDown progressTask;
-    Player player;
+
+    private HashMap<UUID, Long> playersWinding;
+    private List<Location> locations;
+    private double progress;
+    private Player player;
+    private BossBar animatronicBar;
+    private BossBar hiderBar;
+    private BukkitTask bTask;
 
 
-    public MarionetteTask(Main main, List<Player> hiders, List<Location> locations, Player player, MarionetteClass mClass) {
+    public MarionetteTask(Main main, List<Location> locations, Player player, MarionetteClass mClass) {
         this.main = main;
-        this.hiders = hiders;
         this.locations = locations;
         this.playersWinding = new HashMap<>();
-        this.progress = startPercent;
+        this.progress = 20;
         this.player = player;
         this.mClass = mClass;
 
+        Bukkit.getPluginManager().registerEvents(this, main);
+
         this.progressTask = new MProgressDown(main, this, player);
         progressTask.start();
+        barsStart();
+        mClass.setActiveTask(true);
+    }
 
-        Bukkit.getPluginManager().registerEvents(this, main);
+    public void barsStart() {
+        animatronicBar = Bukkit.createBossBar(ChatColor.BLUE + "Stop the hiders from winding the music box. [" + ChatColor.WHITE + progress + "%" + ChatColor.BLUE + "]", BarColor.BLUE, BarStyle.SEGMENTED_10);
+        hiderBar = Bukkit.createBossBar(ChatColor.BLUE + "Wind the music boxes before time runs out! [" + ChatColor.WHITE + progress + "%" + ChatColor.BLUE + "]", BarColor.BLUE, BarStyle.SEGMENTED_10);
+        hiderBar.setProgress(0.2);
+        animatronicBar.setProgress(0.2);
+
+
+        bTask = Bukkit.getScheduler().runTaskTimer(main, () -> {
+            for(UUID uuid : main.getGameManager().getHiderMap().keySet()) {
+                hiderBar.addPlayer(Bukkit.getPlayer(uuid));
+            }
+            for(UUID uuid : main.getGameManager().getAnimatronicsMap().keySet()) {
+                animatronicBar.addPlayer(Bukkit.getPlayer(uuid));
+            }
+        }, 0, 20);
     }
 
 
     public void end(boolean completed) {
         progressTask.cancel();
         HandlerList.unregisterAll(this);
+        hiderBar.removeAll();
+        bTask.cancel();
+        animatronicBar.removeAll();
+        mClass.setActiveTask(false);
         if(completed) {
-            main.getGameManager().sendAnimTitle(ChatColor.GREEN + "Hiders successfully wound the music box", "");
-            main.getGameManager().sendAnimTitle(ChatColor.RED + "Hiders successfully wound the music box", "");
+
+            main.getGameManager().sendHiderTitle(ChatColor.GREEN + "Successfully wound music box!", ChatColor.GRAY + "successfully avoided a punishment");
+            main.getGameManager().sendAnimTitle(ChatColor.RED + "Failed to stop the hiders.", ChatColor.GRAY + "Marionette's ability failed, the music boxes were not protected.");
         } else {
-            main.getGameManager().sendAnimTitle(ChatColor.RED + "Hiders were unable to wind the music box", "");
-            main.getGameManager().sendAnimTitle(ChatColor.GREEN + "Hiders were unable to wind the music box", "");
+
+            main.getGameManager().sendHiderTitle(ChatColor.RED + "Failed to wind the music box.", ChatColor.GRAY + "You failed to wind the music boxes, you will be punished...");
+            main.getGameManager().sendAnimTitle(ChatColor.GREEN + "Successfully stopped the hiders!", ChatColor.GRAY + "Marionette's ability succeeded, punishing the hiders...");
         }
     }
 
@@ -73,7 +103,7 @@ public class MarionetteTask implements Listener {
     @EventHandler
     public void onMusicBoxWind(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getHand().equals(EquipmentSlot.HAND) && e.getClickedBlock().getType().equals(Material.JUKEBOX)) {
+        if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getHand().equals(EquipmentSlot.HAND) && e.getClickedBlock().getType().equals(Material.JUKEBOX)) { //&& main.getGameManager.getHiderMap.containsKey(player.getUniqueId()
             if (isMarionetteBox(e.getClickedBlock().getLocation())) {
                 long curTime = System.currentTimeMillis();
                 if (!playersWinding.containsKey(player.getUniqueId())) {
@@ -82,9 +112,8 @@ public class MarionetteTask implements Listener {
                 long lastClick = playersWinding.get(player.getUniqueId());
                 if (curTime - lastClick <= 252) {
                     playersWinding.put(player.getUniqueId(), curTime);
-                    progress += 2;
-                    Math.round(progress);
-                    player.sendMessage(ChatColor.GREEN + "Increase: " + progress);
+                    progress += 0.5;
+                    setBarProgress(progress);
                     if(progress >= 100) {
                         end(true);
                     }
@@ -99,6 +128,8 @@ public class MarionetteTask implements Listener {
             }
         }
     }
+
+
 
 
 
@@ -126,5 +157,33 @@ public class MarionetteTask implements Listener {
         }
     }
 
+    public void setBarProgress(double progress) {
+        if(progress%10 == 0) {
+            hiderBar.setProgress(progress/100);
+            animatronicBar.setProgress(progress/100);
+        }
+        if(progress <= 20) {
+            if(!hiderBar.getColor().equals(BarColor.RED)) {
+                hiderBar.setColor(BarColor.RED);
+            }
+            hiderBar.setTitle(ChatColor.RED + "Wind the music boxes before time runs out! [" + ChatColor.WHITE + progress + "%" + ChatColor.RED + "]");
+        } else if(progress > 20) {
+            if (!hiderBar.getColor().equals(BarColor.BLUE)) {
+                hiderBar.setColor(BarColor.BLUE);
+            }
+            hiderBar.setTitle(ChatColor.BLUE + "Wind the music boxes before time runs out! [" + ChatColor.WHITE + progress + "%" + ChatColor.BLUE + "]");
+        }
+        if(progress >= 80) {
+            if(!animatronicBar.getColor().equals(BarColor.RED)) {
+                animatronicBar.setColor(BarColor.RED);
+            }
+            animatronicBar.setTitle(ChatColor.RED + "Stop the hiders from winding the music box. [" + ChatColor.WHITE + progress + "%" + ChatColor.RED + "]");
+        } else if(progress < 80) {
+            if(!animatronicBar.getColor().equals(BarColor.BLUE)) {
+                animatronicBar.setColor(BarColor.BLUE);
+            }
+            animatronicBar.setTitle(ChatColor.BLUE + "Stop the hiders from winding the music box. [" + ChatColor.WHITE + progress + "%" + ChatColor.BLUE + "]");
+        }
+    }
 
 }

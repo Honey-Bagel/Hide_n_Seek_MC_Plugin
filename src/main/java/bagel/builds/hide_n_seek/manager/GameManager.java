@@ -132,7 +132,7 @@ public class GameManager {
             if(teams.get(player.getUniqueId()).equals(Team.ANIMATRONIC)) {
                 removeAnimatronic(player);
             } else if(teams.get(player.getUniqueId()).equals(Team.HIDER)) {
-                removeTeam(player);
+                removeHider(player);
             }
             teams.remove(player.getUniqueId());
         }

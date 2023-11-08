@@ -47,4 +47,11 @@ public class BonnieGlow extends BukkitRunnable {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§1You revealed " + "§f" +nearby.size() + "§1 players!"));
         seconds--;
     }
+
+    @Override
+    public void cancel() {
+        for(Entity ent : nearby) {
+            ent.setGlowing(false);
+        }
+    }
 }
