@@ -5,6 +5,7 @@ import bagel.builds.hide_n_seek.classes.Animatronic;
 import bagel.builds.hide_n_seek.classes.Hider;
 import bagel.builds.hide_n_seek.classes.Team;
 import bagel.builds.hide_n_seek.classes.type.*;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -149,7 +150,17 @@ public class GameManager {
     public VentManager getVentManager() { return ventManager; }
 
     /* Util */
+    public void sendAnimTitle(String title, String subString) {
+        for(UUID uuid : animatronicsMap.keySet()) {
+            Bukkit.getPlayer(uuid).sendTitle(title, subString);
+        }
+    }
 
+    public void sendHiderTitle(String title, String subString) {
+        for(UUID uuid : hiderMap.keySet()) {
+            Bukkit.getPlayer(uuid).sendTitle(title, subString);
+        }
+    }
 
 
 }
