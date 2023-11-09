@@ -32,10 +32,12 @@ public class GameListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        if(gameManager.getTeams().get(player.getUniqueId()).equals(Team.ANIMATRONIC)) {
-            gameManager.removeAnimatronic(player);
-        } else if(gameManager.getTeams().get(player.getUniqueId()).equals(Team.HIDER)) {
-            gameManager.removeHider(player);
+        if(gameManager.getTeams().containsKey(player.getUniqueId())) {
+            if (gameManager.getTeams().get(player.getUniqueId()).equals(Team.ANIMATRONIC)) {
+                gameManager.removeAnimatronic(player);
+            } else if (gameManager.getTeams().get(player.getUniqueId()).equals(Team.HIDER)) {
+                gameManager.removeHider(player);
+            }
         }
     }
 

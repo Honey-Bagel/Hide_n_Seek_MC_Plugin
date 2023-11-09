@@ -7,6 +7,7 @@ import bagel.builds.hide_n_seek.listener.GameListener;
 import bagel.builds.hide_n_seek.listener.misc.*;
 import bagel.builds.hide_n_seek.manager.GameManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 

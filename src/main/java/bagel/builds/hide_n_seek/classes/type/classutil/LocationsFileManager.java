@@ -15,11 +15,12 @@ import java.util.List;
 public class LocationsFileManager {
     private Main main;
 
-    private File file = new File(main.getDataFolder(), "locations.yml");;
+    private File file;
     private FileConfiguration fileConfig;
 
     public LocationsFileManager(Main main) {
         this.main = main;
+        file = new File(main.getDataFolder().getPath(), "locations.yml");
     }
 
     public void saveConfig() {

@@ -72,6 +72,9 @@ public class GameManager {
         } else if(animatronic.equals(Animatronic.MARIONETTE)) {
             classtypes.put(player.getUniqueId(), new MarionetteClass(main, animatronic, player.getUniqueId()));
             classtypes.get(player.getUniqueId()).start();
+        } else if(animatronic.equals(Animatronic.FREDDY)) {
+            classtypes.put(player.getUniqueId(), new FreddyClass(main, animatronic, player.getUniqueId()));
+            classtypes.get(player.getUniqueId()).start();
         }
     }
     public void removeAnimatronic(Player player) {

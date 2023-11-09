@@ -31,12 +31,14 @@ public class BonnieClass extends ClassType{
     private Player player;
     private ItemStack BItem;
     private Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(25, TimeUnit.SECONDS).build();
-    private BonnieGlow Btask;
+    private BonnieGlow Btask = null;
+    private UUID uuid;
 
     public BonnieClass(Main main, Animatronic animatronic, UUID uuid) {
         super(main, Animatronic.BONNIE, uuid);
         this.main = main;
         this.player = Bukkit.getPlayer(uuid);
+        this.uuid = uuid;
     }
 
     @Override
@@ -56,8 +58,11 @@ public class BonnieClass extends ClassType{
         if(player.getInventory().contains(BItem)) {
             player.getInventory().remove(BItem);
         }
-        Btask.cancel();
+        if(Btask != null) {
+            Btask.cancel();
+        }
         super.remove();
+//        resetSkin();
     }
 
     @EventHandler
@@ -82,4 +87,5 @@ public class BonnieClass extends ClassType{
             e.setCancelled(true);
         }
     }
+
 }

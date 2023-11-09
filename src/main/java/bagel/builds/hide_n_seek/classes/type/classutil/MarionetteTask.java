@@ -18,6 +18,7 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -26,6 +27,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -68,8 +72,14 @@ public class MarionetteTask implements Listener {
     }
 
     public void start() {
+        Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
+        Team team = board.registerNewTeam("shulkers");
+        team.setColor(ChatColor.YELLOW);
         for(Location loc : locations) {
-            Entity ent = Bukkit.getWorld(loc.getWorld().toString()).spawnEntity(loc, EntityType.SHULKER);
+            Entity ent = Bukkit.getWorld(loc.getWorld().getName()).spawnEntity(loc, EntityType.SHULKER);
+            team.addEntry(ent.getUniqueId().toString());
+            ((LivingEntity) ent).setAI(false);
+            ((LivingEntity) ent).setInvisible(true);
             ent.setInvulnerable(true);
             ent.setGravity(false);
             ent.setSilent(true);

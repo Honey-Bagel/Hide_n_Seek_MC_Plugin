@@ -55,7 +55,7 @@ public class VentHandler implements Listener {
     public void onExitVent(PlayerMoveEvent e) {
         Player player = e.getPlayer();
 
-        if(player.getWorld().getBlockAt(player.getLocation()) != null && player.getWorld().getBlockAt(player.getLocation()).getType() != Material.IRON_TRAPDOOR && main.getGameManager().getVentManager().getVentList().get(player.getUniqueId())) {
+        if(player.getWorld().getBlockAt(player.getLocation()) != null && player.getWorld().getBlockAt(player.getLocation()).getType() != Material.IRON_TRAPDOOR && !main.getGameManager().getVentManager().getVentList().isEmpty() && main.getGameManager().getVentManager().getVentList().get(player.getUniqueId())) {
             main.getGameManager().getVentManager().getVentList().put(player.getUniqueId(), false);
             Bukkit.getPluginManager().callEvent(new VentEvent(player, false));
         }

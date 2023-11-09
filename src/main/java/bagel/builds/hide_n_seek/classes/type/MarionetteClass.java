@@ -2,13 +2,10 @@ package bagel.builds.hide_n_seek.classes.type;
 
 import bagel.builds.hide_n_seek.Main;
 import bagel.builds.hide_n_seek.classes.Animatronic;
-import bagel.builds.hide_n_seek.classes.Hider;
-import bagel.builds.hide_n_seek.classes.type.classrunnable.BonnieGlow;
 import bagel.builds.hide_n_seek.classes.type.classutil.MarionetteTask;
 import bagel.builds.hide_n_seek.classes.type.classutil.TempMarionetteBoxHandler;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.sun.tools.javac.file.Locations;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -79,8 +76,8 @@ public class MarionetteClass extends ClassType{
     public void onItemUse(PlayerInteractEvent e) {
 
             if (e.getPlayer().equals(player) && player.getInventory().getItemInMainHand().equals(MItem) && (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR)) && e.getHand().equals(EquipmentSlot.HAND)) {
+                e.setCancelled(true);
                 if(!activeTask) {
-                    e.setCancelled(true);
                     if (!cooldown.asMap().containsKey(player.getUniqueId())) {
                         new MarionetteTask(main, player, this);
 

@@ -47,7 +47,14 @@ public class FreddyClass extends ClassType{
     @Override
     public void start() {
         loadLocations();
-        FItem = createItem();
+        FItem = new ItemStack(Material.LEVER);
+        ItemMeta iMeta = FItem.getItemMeta();
+        iMeta.setDisplayName(ChatColor.DARK_GRAY + "Freddy's Microphone");
+        iMeta.setLore(Arrays.asList(ChatColor.GRAY + "Randomly teleports you to a set location", ChatColor.GRAY + "30 Second cooldown"));
+        iMeta.setLocalizedName("Freddy's Microphone");
+        FItem.setItemMeta(iMeta);
+
+        player.getInventory().addItem(FItem);
     }
 
     @Override

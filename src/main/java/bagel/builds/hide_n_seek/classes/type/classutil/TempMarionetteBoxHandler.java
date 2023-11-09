@@ -42,10 +42,10 @@ public class TempMarionetteBoxHandler implements Listener {
         boxMeta.setLocalizedName("marionette music box maker");
         musicBox.setItemMeta(boxMeta);
 
-        this.file = new File(main.getDataFolder(), "locations.yml");
+        file = new File(main.getDataFolder().getPath(), "music-boxes.yml");
         this.musicboxes = YamlConfiguration.loadConfiguration(file);
         saveConfig();
-        Bukkit.getPluginManager().registerEvents(this, this.main);
+        Bukkit.getPluginManager().registerEvents(this, main);
 
     }
 
@@ -55,14 +55,14 @@ public class TempMarionetteBoxHandler implements Listener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.file = new File(main.getDataFolder().getPath(), "locations.yml");
+        this.file = new File(main.getDataFolder().getPath(), "music-boxes.yml");
         this.musicboxes = YamlConfiguration.loadConfiguration(file);
     }
 
     @EventHandler
     public void onBoxPlace(BlockPlaceEvent e) {
         Player player = e.getPlayer();
-        int count = Objects.requireNonNull(musicboxes.getConfigurationSection("locations").getKeys(false).size()) ;
+        int count = Objects.requireNonNull(musicboxes.getConfigurationSection("locations")).getKeys(false).size();
         if(e.getItemInHand().equals(musicBox) && e.getBlockPlaced().getType().equals(Material.JUKEBOX)) {
             Location loc = e.getBlockPlaced().getLocation();
 
@@ -73,12 +73,13 @@ public class TempMarionetteBoxHandler implements Listener {
 //            musicboxes.createSection("locations.musicbox" + count + ".world");
 
 
-            musicboxes.set("Music-Box-locations.musicbox-" + count + ".x", loc.getBlockX());
-            musicboxes.set("Music-Box-locations.musicbox-" + count + ".y", loc.getBlockY());
-            musicboxes.set("Music-Box-locations.musicbox-" + count + ".z", loc.getBlockZ());
-            musicboxes.set("Music-Box-locations.musicbox-" + count + ".world", loc.getWorld().getName());
+            musicboxes.set("locations.musicbox-" + count + ".x", loc.getBlockX());
+            musicboxes.set("locations.musicbox-" + count + ".y", loc.getBlockY());
+            musicboxes.set("locations.musicbox-" + count + ".z", loc.getBlockZ());
+            musicboxes.set("locations.musicbox-" + count + ".world", loc.getWorld().getName());
 
             saveConfig();
+            marionetteClass.addLocation(loc);
         }
     }
 
@@ -88,7 +89,7 @@ public class TempMarionetteBoxHandler implements Listener {
         if(e.getBlock().getType().equals(Material.JUKEBOX)) {
 //            System.out.println("test");
             if(isMarionetteBox(e.getBlock().getLocation()) != -1) {
-                musicboxes.set("Music-Box-locations.musicbox-" + isMarionetteBox(e.getBlock().getLocation()), null);
+                musicboxes.set("locations.musicbox-" + isMarionetteBox(e.getBlock().getLocation()), null);
 //                System.out.println(locations.indexOf(e.getBlock().getLocation()));
             }
 
@@ -98,18 +99,18 @@ public class TempMarionetteBoxHandler implements Listener {
     //LEARN YML
     public void fileStart() throws IOException {
         System.out.println(ChatColor.GREEN + "Marionette on Enable event");
-        if(!musicboxes.isConfigurationSection("Music-Box-locations")) {
-            musicboxes.createSection("Music-Box-locations");
+        if(!musicboxes.isConfigurationSection("locations")) {
+            musicboxes.createSection("locations");
             musicboxes.save(file);
         }
-            for (String string : musicboxes.getConfigurationSection("Music-Box-locations").getKeys(false)) {
+            for (String string : musicboxes.getConfigurationSection("locations").getKeys(false)) {
 //                System.out.println("test");
 
                 marionetteClass.addLocation(new Location(
                         Bukkit.createWorld(new WorldCreator(musicboxes.getString("locations." + string + ".world"))),
-                        musicboxes.getDouble("Music-Box-locations." + string + ".x"),
-                        musicboxes.getDouble("Music-Box-locations." + string + ".y"),
-                        musicboxes.getDouble("Music-Box-locations." + string + ".z")));
+                        musicboxes.getDouble("locations." + string + ".x"),
+                        musicboxes.getDouble("locations." + string + ".y"),
+                        musicboxes.getDouble("locations." + string + ".z")));
 //                System.out.println(locations.toString());
 //                System.out.println(locations.toArray());
 //                System.out.println(locations.toArray().toString());
