@@ -142,7 +142,7 @@ public class FoxyClass extends ClassType{
 
     @EventHandler
     public void onDropItem(PlayerDropItemEvent e) {
-        if(e.getItemDrop().equals(FItem)) {
+        if(e.getItemDrop().getItemStack().equals(FItem)) {
             e.setCancelled(true);
         }
     }

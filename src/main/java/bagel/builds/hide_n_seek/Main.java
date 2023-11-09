@@ -1,5 +1,6 @@
 package bagel.builds.hide_n_seek;
 
+import bagel.builds.hide_n_seek.classes.type.classutil.LocationsFileManager;
 import bagel.builds.hide_n_seek.classes.type.classutil.TempMarionetteBoxHandler;
 import bagel.builds.hide_n_seek.command.*;
 import bagel.builds.hide_n_seek.listener.GameListener;
@@ -15,6 +16,7 @@ import java.io.File;
 public final class Main extends JavaPlugin {
 
     private GameManager gameManager;
+    private LocationsFileManager locFileManager;
 
     @Override
     public void onEnable() {
@@ -29,6 +31,7 @@ public final class Main extends JavaPlugin {
         new VentHandler(this);
 
         gameManager = new GameManager(this);
+        locFileManager = new LocationsFileManager(this);
 
         getCommand("nightvision").setExecutor(new NightVision());
         getCommand("sit").setExecutor(new SitCommand());
@@ -50,4 +53,5 @@ public final class Main extends JavaPlugin {
 
 
     public GameManager getGameManager() { return gameManager; }
+    public LocationsFileManager getLocFileManager() { return locFileManager; }
 }

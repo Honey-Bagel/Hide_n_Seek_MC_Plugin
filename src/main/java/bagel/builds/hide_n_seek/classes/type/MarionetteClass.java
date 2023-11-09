@@ -8,6 +8,7 @@ import bagel.builds.hide_n_seek.classes.type.classutil.MarionetteTask;
 import bagel.builds.hide_n_seek.classes.type.classutil.TempMarionetteBoxHandler;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.sun.tools.javac.file.Locations;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -46,14 +47,13 @@ public class MarionetteClass extends ClassType{
 
     @Override
     public void start() {
-
-        this.mbhandler = new TempMarionetteBoxHandler(main);
+        this.locations = new ArrayList<>();
+        this.mbhandler = new TempMarionetteBoxHandler(main, this);
         try {
             mbhandler.fileStart();
         } catch(IOException e) {
             e.printStackTrace();
         }
-        this.locations = mbhandler.getLocations();
 
         this.MItem = new ItemStack(Material.JUKEBOX);
         ItemMeta mMeta = MItem.getItemMeta();
@@ -78,23 +78,25 @@ public class MarionetteClass extends ClassType{
     @EventHandler
     public void onItemUse(PlayerInteractEvent e) {
 
-            if (e.getPlayer().equals(player) && player.getInventory().getItemInMainHand().equals(MItem) && (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR)) && e.getHand().equals(EquipmentSlot.HAND) && !activeTask) {
-                e.setCancelled(true);
-                if (!cooldown.asMap().containsKey(player.getUniqueId())) {
-                    new MarionetteTask(main, locations, player, this);
+            if (e.getPlayer().equals(player) && player.getInventory().getItemInMainHand().equals(MItem) && (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR)) && e.getHand().equals(EquipmentSlot.HAND)) {
+                if(!activeTask) {
+                    e.setCancelled(true);
+                    if (!cooldown.asMap().containsKey(player.getUniqueId())) {
+                        new MarionetteTask(main, player, this);
 
+                    } else {
+                        long distance = cooldown.asMap().get(player.getUniqueId()) - System.currentTimeMillis();
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§4You must wait " + "§f" + TimeUnit.MILLISECONDS.toSeconds(distance) + "§4 seconds to use this."));
+                    }
                 } else {
-                    long distance = cooldown.asMap().get(player.getUniqueId()) - System.currentTimeMillis();
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§4You must wait " + "§f" + TimeUnit.MILLISECONDS.toSeconds(distance) + "§4 seconds to use this."));
-                }
-            } else {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§4You already have an active ability."));
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§4You already have an active ability."));
+            }
         }
     }
 
     @EventHandler
     public void onDropItem(PlayerDropItemEvent e) {
-        if(e.getItemDrop().equals(MItem)) {
+        if(e.getItemDrop().getItemStack().equals(MItem)) {
             e.setCancelled(true);
         }
     }
@@ -113,5 +115,11 @@ public class MarionetteClass extends ClassType{
             activeTask = false;
             cooldown.put(player.getUniqueId(), System.currentTimeMillis() + 80000);
         }
+    }
+
+    public List<Location> getLocations() { return locations; }
+
+    public void addLocation(Location loc) {
+        locations.add(loc);
     }
 }

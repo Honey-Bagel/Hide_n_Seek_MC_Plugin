@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,6 +31,7 @@ public class VentHandler implements Listener {
 
     @EventHandler
     public void onVent(PlayerToggleSneakEvent e) {
+
         Player player = e.getPlayer();
         if (!player.isSneaking() || !player.isOnGround()) return;
         Block targetBlock = player.getTargetBlockExact(1);

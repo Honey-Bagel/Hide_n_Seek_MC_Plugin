@@ -1,6 +1,7 @@
 package bagel.builds.hide_n_seek.classes.type.classutil;
 
 import bagel.builds.hide_n_seek.Main;
+import bagel.builds.hide_n_seek.classes.type.MarionetteClass;
 import bagel.builds.hide_n_seek.manager.GameManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,11 +28,13 @@ public class TempMarionetteBoxHandler implements Listener {
     private FileConfiguration musicboxes;
     private File file;
     private List<Location> locations;
+    private MarionetteClass marionetteClass;
 
 
-    public TempMarionetteBoxHandler(Main main) {
+    public TempMarionetteBoxHandler(Main main, MarionetteClass marionetteClass) {
         this.main = main;
-        this.locations = new ArrayList<>();
+        this.marionetteClass = marionetteClass;
+        this.locations = marionetteClass.getLocations();
 
         musicBox = new ItemStack(Material.JUKEBOX);
         ItemMeta boxMeta = musicBox.getItemMeta();
@@ -39,7 +42,7 @@ public class TempMarionetteBoxHandler implements Listener {
         boxMeta.setLocalizedName("marionette music box maker");
         musicBox.setItemMeta(boxMeta);
 
-        this.file = new File(main.getDataFolder(), "music-boxes.yml");
+        this.file = new File(main.getDataFolder(), "locations.yml");
         this.musicboxes = YamlConfiguration.loadConfiguration(file);
         saveConfig();
         Bukkit.getPluginManager().registerEvents(this, this.main);
@@ -52,7 +55,7 @@ public class TempMarionetteBoxHandler implements Listener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.file = new File(main.getDataFolder().getPath(), "music-boxes.yml");
+        this.file = new File(main.getDataFolder().getPath(), "locations.yml");
         this.musicboxes = YamlConfiguration.loadConfiguration(file);
     }
 
@@ -70,10 +73,10 @@ public class TempMarionetteBoxHandler implements Listener {
 //            musicboxes.createSection("locations.musicbox" + count + ".world");
 
 
-            musicboxes.set("locations.musicbox-" + count + ".x", loc.getBlockX());
-            musicboxes.set("locations.musicbox-" + count + ".y", loc.getBlockY());
-            musicboxes.set("locations.musicbox-" + count + ".z", loc.getBlockZ());
-            musicboxes.set("locations.musicbox-" + count + ".world", loc.getWorld().getName());
+            musicboxes.set("Music-Box-locations.musicbox-" + count + ".x", loc.getBlockX());
+            musicboxes.set("Music-Box-locations.musicbox-" + count + ".y", loc.getBlockY());
+            musicboxes.set("Music-Box-locations.musicbox-" + count + ".z", loc.getBlockZ());
+            musicboxes.set("Music-Box-locations.musicbox-" + count + ".world", loc.getWorld().getName());
 
             saveConfig();
         }
@@ -85,7 +88,7 @@ public class TempMarionetteBoxHandler implements Listener {
         if(e.getBlock().getType().equals(Material.JUKEBOX)) {
 //            System.out.println("test");
             if(isMarionetteBox(e.getBlock().getLocation()) != -1) {
-                musicboxes.set("locations.musicbox-" + isMarionetteBox(e.getBlock().getLocation()), null);
+                musicboxes.set("Music-Box-locations.musicbox-" + isMarionetteBox(e.getBlock().getLocation()), null);
 //                System.out.println(locations.indexOf(e.getBlock().getLocation()));
             }
 
@@ -95,17 +98,18 @@ public class TempMarionetteBoxHandler implements Listener {
     //LEARN YML
     public void fileStart() throws IOException {
         System.out.println(ChatColor.GREEN + "Marionette on Enable event");
-        if(!musicboxes.isConfigurationSection("locations")) {
-            musicboxes.createSection("locations");
+        if(!musicboxes.isConfigurationSection("Music-Box-locations")) {
+            musicboxes.createSection("Music-Box-locations");
             musicboxes.save(file);
         }
-            for (String string : musicboxes.getConfigurationSection("locations").getKeys(false)) {
+            for (String string : musicboxes.getConfigurationSection("Music-Box-locations").getKeys(false)) {
 //                System.out.println("test");
-                locations.add(new Location(
+
+                marionetteClass.addLocation(new Location(
                         Bukkit.createWorld(new WorldCreator(musicboxes.getString("locations." + string + ".world"))),
-                        musicboxes.getDouble("locations." + string + ".x"),
-                        musicboxes.getDouble("locations." + string + ".y"),
-                        musicboxes.getDouble("locations." + string + ".z")));
+                        musicboxes.getDouble("Music-Box-locations." + string + ".x"),
+                        musicboxes.getDouble("Music-Box-locations." + string + ".y"),
+                        musicboxes.getDouble("Music-Box-locations." + string + ".z")));
 //                System.out.println(locations.toString());
 //                System.out.println(locations.toArray());
 //                System.out.println(locations.toArray().toString());
@@ -127,6 +131,5 @@ public class TempMarionetteBoxHandler implements Listener {
 
 
     public ItemStack getMusicBox() { return musicBox; }
-    public List<Location> getLocations() { return locations; }
 
 }

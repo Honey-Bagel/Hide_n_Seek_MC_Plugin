@@ -19,7 +19,7 @@ public class MProgressDown extends BukkitRunnable {
     }
 
     public void start() {
-            runTaskTimer(main, 0, 60);
+            runTaskTimer(main, 0, 40);
     }
 
     @Override

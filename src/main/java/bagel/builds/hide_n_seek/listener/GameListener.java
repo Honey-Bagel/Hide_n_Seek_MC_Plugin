@@ -48,41 +48,43 @@ public class GameListener implements Listener {
 
         if(e.getView().getTitle().contains("Class Selection") && e.getInventory() != null && e.getCurrentItem() != null) {
             e.setCancelled(true);
-            if(main.getGameManager().getAnimatronicsMap().containsKey(player.getUniqueId()) && e.getCurrentItem().getItemMeta().getLocalizedName().equalsIgnoreCase("remove class")) {
-                if(gameManager.getTeams().get(player.getUniqueId()).equals(Team.ANIMATRONIC)) {
+            if (!e.getClickedInventory().equals(player.getInventory())) {
+            if (main.getGameManager().getAnimatronicsMap().containsKey(player.getUniqueId()) && e.getCurrentItem().getItemMeta().getLocalizedName().equalsIgnoreCase("remove class")) {
+                if (gameManager.getTeams().get(player.getUniqueId()).equals(Team.ANIMATRONIC)) {
                     gameManager.removeAnimatronic(player);
                     player.sendMessage(ChatColor.GREEN + "Removed your class.");
-                } else if(gameManager.getTeams().get(player.getUniqueId()).equals(Team.HIDER)) {
+                } else if (gameManager.getTeams().get(player.getUniqueId()).equals(Team.HIDER)) {
                     gameManager.removeHider(player);
                     player.sendMessage(ChatColor.GREEN + "Removed your class.");
                 } else {
                     player.sendMessage(ChatColor.RED + "You don't have a class.");
                 }
-            } else if(e.getCurrentItem().getType() != Material.BARRIER && gameManager.getTeams().get(player.getUniqueId()).equals(Team.ANIMATRONIC)) {
-                    Animatronic animatronic = Animatronic.valueOf(e.getCurrentItem().getItemMeta().getLocalizedName());
+            } else if (e.getCurrentItem().getType() != Material.BARRIER && gameManager.getTeams().get(player.getUniqueId()).equals(Team.ANIMATRONIC)) {
+                Animatronic animatronic = Animatronic.valueOf(e.getCurrentItem().getItemMeta().getLocalizedName());
 
-                    if (!gameManager.isAnimatronicTaken(animatronic)) {
-                        player.sendMessage(ChatColor.GREEN + "You selected " + animatronic.getName() + ChatColor.GREEN + ".");
-                        main.getGameManager().setAnimatronic(player, animatronic);
-                        player.closeInventory();
-                    } else if (main.getGameManager().getAnimatronic(player) == animatronic) {
-                        player.sendMessage(ChatColor.RED + "You already have this animatronic selected.");
-                    } else {
-                        player.sendMessage(ChatColor.RED + "The animatronic you selected is already taken.");
-                    }
-            } else if(gameManager.getTeams().get(player.getUniqueId()).equals(Team.HIDER)) {
+                if (!gameManager.isAnimatronicTaken(animatronic)) {
+                    player.sendMessage(ChatColor.GREEN + "You selected " + animatronic.getName() + ChatColor.GREEN + ".");
+                    main.getGameManager().setAnimatronic(player, animatronic);
+                    player.closeInventory();
+                } else if (main.getGameManager().getAnimatronic(player) == animatronic) {
+                    player.sendMessage(ChatColor.RED + "You already have this animatronic selected.");
+                } else {
+                    player.sendMessage(ChatColor.RED + "The animatronic you selected is already taken.");
+                }
+            } else if (gameManager.getTeams().get(player.getUniqueId()).equals(Team.HIDER)) {
                 Hider hider = Hider.valueOf(e.getCurrentItem().getItemMeta().getLocalizedName());
 
-                if(!gameManager.isHiderTaken(hider)) {
+                if (!gameManager.isHiderTaken(hider)) {
                     player.sendMessage(ChatColor.GREEN + "You selected " + hider.getName() + ChatColor.GREEN + ".");
                     main.getGameManager().setHider(player, hider);
                     player.closeInventory();
-                } else if(main.getGameManager().getHider(player) == hider) {
+                } else if (main.getGameManager().getHider(player) == hider) {
                     player.sendMessage(ChatColor.RED + "You already have this hider selected.");
                 } else {
                     player.sendMessage(ChatColor.RED + "The hider you selected is already taken.");
                 }
             }
+        }
 
         }
 

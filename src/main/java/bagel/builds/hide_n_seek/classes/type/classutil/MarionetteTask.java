@@ -16,6 +16,8 @@ import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -47,9 +49,9 @@ public class MarionetteTask implements Listener {
     private BukkitTask bTask;
 
 
-    public MarionetteTask(Main main, List<Location> locations, Player player, MarionetteClass mClass) {
+    public MarionetteTask(Main main, Player player, MarionetteClass mClass) {
         this.main = main;
-        this.locations = locations;
+        this.locations = mClass.getLocations();
         this.playersWinding = new HashMap<>();
         this.progress = 20;
         this.player = player;
@@ -59,8 +61,21 @@ public class MarionetteTask implements Listener {
 
         this.progressTask = new MProgressDown(main, this, player);
         progressTask.start();
-        barsStart();
         mClass.setActiveTask(true);
+
+        barsStart();
+        start();
+    }
+
+    public void start() {
+        for(Location loc : locations) {
+            Entity ent = Bukkit.getWorld(loc.getWorld().toString()).spawnEntity(loc, EntityType.SHULKER);
+            ent.setInvulnerable(true);
+            ent.setGravity(false);
+            ent.setSilent(true);
+            ent.setGlowing(true);
+            Bukkit.getScheduler().runTaskLater(main, ent::remove, 60);
+        }
     }
 
     public void barsStart() {

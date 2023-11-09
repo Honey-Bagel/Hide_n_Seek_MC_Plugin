@@ -64,7 +64,7 @@ public class BonnieClass extends ClassType{
     public void onItemUse(PlayerInteractEvent e) {
         Player player = e.getPlayer();
 
-        if (e.getPlayer().equals(player) && player.getInventory().getItemInMainHand().equals(BItem) && ( e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR) ) && e.getHand().equals(EquipmentSlot.HAND)) {
+        if (player.equals(this.player) && player.getInventory().getItemInMainHand().equals(BItem) && ( e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR) ) && e.getHand().equals(EquipmentSlot.HAND)) {
             if(!cooldown.asMap().containsKey(player.getUniqueId())) {
                 Btask = new BonnieGlow(main, player);
                 Btask.start();
@@ -78,7 +78,7 @@ public class BonnieClass extends ClassType{
 
     @EventHandler
     public void onDropItem(PlayerDropItemEvent e) {
-        if(e.getItemDrop().equals(BItem)) {
+        if(e.getItemDrop().getItemStack().equals(BItem)) {
             e.setCancelled(true);
         }
     }
