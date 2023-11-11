@@ -5,7 +5,12 @@ import bagel.builds.hide_n_seek.classes.Animatronic;
 import bagel.builds.hide_n_seek.classes.Hider;
 import bagel.builds.hide_n_seek.classes.Team;
 import bagel.builds.hide_n_seek.classes.type.*;
+import bagel.builds.hide_n_seek.enums.GameState;
+import bagel.builds.hide_n_seek.instance.Game;
+import bagel.builds.hide_n_seek.instance.LiveGame;
+import bagel.builds.hide_n_seek.listener.LiveGameListener;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -22,6 +27,10 @@ public class GameManager {
     private HashMap<UUID, Hider> hiderMap;
     private HashMap<UUID, Team> teams;
     private HashMap<UUID, ClassType> classtypes;
+    private List<Game> games = new ArrayList<>();
+    private Player gameController;
+    private GameState state;
+    private LiveGame liveGame;
 
     public GameManager(Main main) {
         this.main = main;
@@ -33,10 +42,48 @@ public class GameManager {
         this.classtypes = new HashMap<>();
 
         this.ventManager = new VentManager(this);
+
+        this.state = GameState.WAITING;
+
+        this.liveGame = new LiveGame(this);
     }
 
     public void start() {
+        //start countdown
+        for(UUID uuid : players) {
+            if(!teams.containsKey(uuid)) {
+                sendGameTitle("Not all players selecter a team/class", "");
+                return;
+            }
+        }
+        sendGameTitle("starting game", "");
+        liveGame.start();
+    }
 
+    public void reset() {
+        if(state.equals(GameState.LIVE) || state.equals(GameState.HIDING)) {
+            //teleport all players to lobby
+            //give gamecontroller back settings book
+            //clear kits and inventories
+            for(UUID uuid : players){
+                Player player = Bukkit.getPlayer(uuid);
+                if(getTeam(player).equals(Team.ANIMATRONIC)) {
+                    removeAnimatronic(player);
+                } else if(getTeam(player).equals(Team.HIDER)) {
+                    removeHider(player);
+                }
+                removeTeam(player);
+                player.getInventory().clear();
+                if(gameController.equals(player)) {
+                    //Give game controller back settings book
+                    player.getInventory().addItem();
+                }
+            }
+        }
+        sendGameTitle("", "");
+        state = GameState.WAITING;
+        liveGame.cancelTasks();
+        liveGame = new LiveGame(this);
     }
 
 
@@ -44,6 +91,29 @@ public class GameManager {
     public void addPlayer(Player player) {
         players.add(player.getUniqueId());
         ventManager.addPlayer(player);
+        if(players.size() == 1) {
+            gameController = player;
+            gameController.getInventory().addItem();
+        }
+    }
+
+    public void removePlayer(Player player) {
+        players.remove(player);
+        ventManager.removePlayer(player);
+        removeTeam(player);
+        if(gameController.equals(player)) {
+            gameController = Bukkit.getPlayer(players.get((int) Math.random()*players.size()));
+        }
+        if(state == GameState.LIVE || state == GameState.HIDING) {
+            if(hiderMap.size() == 0) {
+                sendGameTitle(ChatColor.RED + "Not enough Hiders", ChatColor.GRAY + "Game reset");
+                reset();
+            } else if(animatronicsMap.size() == 0) {
+                sendGameTitle(ChatColor.RED + "Not enough Animatronics", ChatColor.GRAY + "Game reset");
+                reset();
+            }
+        }
+
     }
 
 
@@ -52,6 +122,17 @@ public class GameManager {
 
     public Main getMain() { return main; }
     public List<UUID> getPlayers() { return players; }
+    public void setState(GameState newstate) {
+        this.state = newstate;
+        System.out.println(this.state);
+    }
+    public void sendGameTitle(String title, String subTitle) {
+        for(UUID uuid : players) {
+            Bukkit.getPlayer(uuid).sendTitle(title, subTitle);
+        }
+    }
+    public GameState getState() { return state; }
+    public LiveGame getLiveGame() { return liveGame; }
 
     /* Animatronic Hashmap */
     public HashMap<UUID, Animatronic> getAnimatronicsMap() { return animatronicsMap; }
@@ -82,6 +163,7 @@ public class GameManager {
             animatronicsMap.remove(player.getUniqueId());
             if(classtypes.containsKey(player.getUniqueId())) {
                 classtypes.get(player.getUniqueId()).reset();
+                classtypes.remove(player.getUniqueId());
             }
         }
     }
@@ -108,6 +190,10 @@ public class GameManager {
     public void removeHider(Player player) {
         if(hiderMap.containsKey(player.getUniqueId())) {
             hiderMap.remove(player.getUniqueId());
+            if(classtypes.containsKey(player.getUniqueId())) {
+                classtypes.get(player.getUniqueId()).reset();
+                classtypes.remove(player.getUniqueId());
+            }
         }
     }
     public Hider getHider(Player player) {
@@ -164,6 +250,15 @@ public class GameManager {
             Bukkit.getPlayer(uuid).sendTitle(title, subString);
         }
     }
+
+//    public Game getGame(int id) {
+//        for(Game game : games) {
+//            if(game.getId() == id) {
+//                return game;
+//            }
+//        }
+//        return null;
+//    }
 
 
 }

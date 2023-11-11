@@ -4,6 +4,7 @@ public enum GameState {
 
     WAITING,
     COUNTDOWN,
+    HIDING,
     LIVE;
 
 }

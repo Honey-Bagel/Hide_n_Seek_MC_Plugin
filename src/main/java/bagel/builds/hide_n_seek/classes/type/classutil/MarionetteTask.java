@@ -73,7 +73,7 @@ public class MarionetteTask implements Listener {
 
     public void start() {
         Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
-        Team team = board.registerNewTeam("shulkers");
+        Team team = board.registerNewTeam("MusicBoxes");
         team.setColor(ChatColor.YELLOW);
         for(Location loc : locations) {
             Entity ent = Bukkit.getWorld(loc.getWorld().getName()).spawnEntity(loc, EntityType.SHULKER);

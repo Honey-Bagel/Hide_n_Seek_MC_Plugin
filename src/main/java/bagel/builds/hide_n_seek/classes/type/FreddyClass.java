@@ -46,7 +46,6 @@ public class FreddyClass extends ClassType{
 
     @Override
     public void start() {
-        loadLocations();
         FItem = new ItemStack(Material.LEVER);
         ItemMeta iMeta = FItem.getItemMeta();
         iMeta.setDisplayName(ChatColor.DARK_GRAY + "Freddy's Microphone");
@@ -55,6 +54,11 @@ public class FreddyClass extends ClassType{
         FItem.setItemMeta(iMeta);
 
         player.getInventory().addItem(FItem);
+
+        loadLocations();
+        for(Location loc : teleportLocations) {
+            Bukkit.getWorld(loc.getWorld().getName()).getBlockAt(loc).setType(Material.STONE_PRESSURE_PLATE);
+        }
     }
 
     @Override
@@ -87,7 +91,7 @@ public class FreddyClass extends ClassType{
         Player player = e.getPlayer();
         if(player.equals(this.player) && player.getInventory().getItemInMainHand().equals(FItem) && ( e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR) ) && e.getHand().equals(EquipmentSlot.HAND)) {
             if(!cooldown.asMap().containsKey(player.getUniqueId())) {
-                player.teleport(teleportLocations.get((int) Math.random()*teleportLocations.size()));
+                player.teleport(teleportLocations.get((int) (Math.random()*teleportLocations.size())));
             } else {
                 long distance = cooldown.asMap().get(player.getUniqueId()) - System.currentTimeMillis();
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§4You must wait " + "§f" + TimeUnit.MILLISECONDS.toSeconds(distance) + "§4 seconds to use this."));

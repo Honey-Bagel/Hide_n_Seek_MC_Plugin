@@ -21,6 +21,7 @@ public class LocationsFileManager {
     public LocationsFileManager(Main main) {
         this.main = main;
         file = new File(main.getDataFolder().getPath(), "locations.yml");
+        fileConfig = YamlConfiguration.loadConfiguration(file);
     }
 
     public void saveConfig() {

@@ -27,6 +27,11 @@ public class VentManager {
     public void addPlayer(Player player) {
             ventList.put(player.getUniqueId(), false);
     }
+    public void removePlayer(Player player) {
+        if(ventList.containsKey(player.getUniqueId())) {
+            ventList.remove(player.getUniqueId());
+        }
+    }
 
 
 

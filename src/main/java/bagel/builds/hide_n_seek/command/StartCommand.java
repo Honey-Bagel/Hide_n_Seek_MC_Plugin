@@ -6,18 +6,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class TestCommand implements CommandExecutor {
+public class StartCommand implements CommandExecutor {
     private Main main;
-
-    public TestCommand(Main main) { this.main = main; }
-
+    public StartCommand(Main main) {
+        this.main = main;
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
 
-        if(!(sender instanceof Player)) return false;
+        if(!(sender instanceof Player));
 
-        sender.sendMessage("In Vents: " + main.getGameManager().getVentManager().getVentList().get(((Player) sender).getUniqueId()));
-        sender.sendMessage("State: " + main.getGameManager().getState());
+        main.getGameManager().start();
 
         return false;
     }

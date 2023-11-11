@@ -5,11 +5,16 @@ import bagel.builds.hide_n_seek.classes.Animatronic;
 import bagel.builds.hide_n_seek.classes.type.classrunnable.BonnieGlow;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -51,6 +56,7 @@ public class BonnieClass extends ClassType{
         BItem.setItemMeta(bMeta);
 
         player.getInventory().addItem(BItem);
+        System.out.println("test");
     }
 
     @Override

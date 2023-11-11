@@ -3,9 +3,13 @@ package bagel.builds.hide_n_seek.listener;
 import bagel.builds.hide_n_seek.Main;
 import bagel.builds.hide_n_seek.classes.*;
 import bagel.builds.hide_n_seek.manager.GameManager;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,22 +28,23 @@ public class GameListener implements Listener {
         this.gameManager = gameManager;
     }
 
+
+
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         main.getGameManager().addPlayer(e.getPlayer());
+//        setSkin(e.getPlayer());
     }
 
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        Player player = e.getPlayer();
-        if(gameManager.getTeams().containsKey(player.getUniqueId())) {
-            if (gameManager.getTeams().get(player.getUniqueId()).equals(Team.ANIMATRONIC)) {
-                gameManager.removeAnimatronic(player);
-            } else if (gameManager.getTeams().get(player.getUniqueId()).equals(Team.HIDER)) {
-                gameManager.removeHider(player);
-            }
-        }
-    }
+//    public void setSkin(Player player) {
+//        EntityPlayer ep = ((CraftPlayer) player).getHandle();
+//        GameProfile gp = ep.getBukkitEntity().getProfile();
+//        PropertyMap pm = gp.getProperties();
+//        Property property = pm.get("textures").iterator().next();
+//        pm.remove("textures", property);
+//        pm.put("textures", new Property("textures", "ewogICJ0aW1lc3RhbXAiIDogMTY0MzcxMjcxMTcxOSwKICAicHJvZmlsZUlkIiA6ICI3ZGEyYWIzYTkzY2E0OGVlODMwNDhhZmMzYjgwZTY4ZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJHb2xkYXBmZWwiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWVjNWIyNzI0MzEyYTI2YmVlY2MyOWY4Nzg5ZGQ4M2QzMTA5ZjRkYzU3NzM4NGQyYWRhMjFmOGU4MzdlNWFiYyIKICAgIH0KICB9Cn0=", "bHOLVe8gDakxGwxyJgBpUL5L/b6x65YiHw83k8FQ2fF9I0hCKrNGUB1uBWlUUgOvtDmX65L0DmQxLf66bzgJmnapRZZmBa4nM79U4Bnsy7yMKHQ+wS9HmJeKmH893+Fp1FdPmrcpD8OhdcN2Of1tq6LE3XLFGV/ptmMT0CldR27w9P5Fv87scMhyLLjSgstnIf5ZOLMsKr21jKPLuw5u30YUeyiup4igXX5ff/PlVgoVe2CTaucg7VwiJSWTwlxRJjp0eqRD6fSi1xNfYnl3WCGY5bQi72RgMCaHWoZdKURvncAu3eEuKRjvHsElJcrX8rHaXQ3sb9AOEPkJ2NhZOWZ3w3BtaqzTTGvET1bUJWV+xcIx9tkiJrWQJ1mba8eA2kIJ34Bvebns0Rx++K84UN6xU2i4FIr57xNhYq3NnyCLXerJ9kURgQfJr3dFPI6i/zGdhcSu2pYulsqlXYdWY3k8xqC/NLIoKlOauvXDAMACr5Ai8GABi2U7ZZWVlSGtMnBEt+4vVKslQprKrGbn5ZS6uw5JVZ/uwxDQ/TA/chWGQTtpSfZnk59wFYTN0PWDAcbv0J1jBRIuXvfgs7B94aASNm/nGMues7cQ5x6VY3nBAHMN16fpk+UxIwyx9Pm1L9OinUUfoQWKjVlAak+d24ELvLxaykL6vr/wcdAp6i8="));
+//    }
 
 
     //UI Click
