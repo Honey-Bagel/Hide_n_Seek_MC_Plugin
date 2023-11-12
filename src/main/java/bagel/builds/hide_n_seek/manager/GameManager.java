@@ -8,11 +8,12 @@ import bagel.builds.hide_n_seek.classes.type.*;
 import bagel.builds.hide_n_seek.enums.GameState;
 import bagel.builds.hide_n_seek.instance.Game;
 import bagel.builds.hide_n_seek.instance.LiveGame;
-import bagel.builds.hide_n_seek.listener.LiveGameListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,11 @@ public class GameManager {
     private Player gameController;
     private GameState state;
     private LiveGame liveGame;
+    private static int gameTime;
+    private static int hideTime;
+    private static int additionalCooldown;
+    private static boolean allowDupes;
+    private static boolean nightmare;
 
     public GameManager(Main main) {
         this.main = main;
@@ -44,12 +50,12 @@ public class GameManager {
         this.ventManager = new VentManager(this);
 
         this.state = GameState.WAITING;
-
-        this.liveGame = new LiveGame(this);
     }
 
     public void start() {
         //start countdown
+        loadSettings();
+        this.liveGame = new LiveGame(main, this, gameTime, hideTime);
         for(UUID uuid : players) {
             if(!teams.containsKey(uuid)) {
                 sendGameTitle("Not all players selecter a team/class", "");
@@ -73,17 +79,17 @@ public class GameManager {
                     removeHider(player);
                 }
                 removeTeam(player);
-                player.getInventory().clear();
+//                player.getInventory().clear();
                 if(gameController.equals(player)) {
                     //Give game controller back settings book
-                    player.getInventory().addItem();
+                    main.getGameSettingsConfig().giveBook(player);
                 }
             }
         }
         sendGameTitle("", "");
         state = GameState.WAITING;
         liveGame.cancelTasks();
-        liveGame = new LiveGame(this);
+        main.getGameSettingsConfig().saveDefaultConfig();
     }
 
 
@@ -93,12 +99,12 @@ public class GameManager {
         ventManager.addPlayer(player);
         if(players.size() == 1) {
             gameController = player;
-            gameController.getInventory().addItem();
+            main.getGameSettingsConfig().giveBook(player);
         }
     }
 
     public void removePlayer(Player player) {
-        players.remove(player);
+        players.remove(player.getUniqueId());
         ventManager.removePlayer(player);
         removeTeam(player);
         if(gameController.equals(player)) {
@@ -168,6 +174,7 @@ public class GameManager {
         }
     }
     public Boolean isAnimatronicTaken(Animatronic animatronic) {
+        if(allowDupes) return false;
         for(Animatronic a : animatronicsMap.values()) {
             if(a.equals(animatronic)) {
                 return true;
@@ -175,6 +182,24 @@ public class GameManager {
         }
         return false;
     }
+
+//    public void removeDupes() {
+//        for(Animatronic a : animatronicsMap.values()) {
+//            for(Animatronic b: animatronicsMap.values()) {
+//                if(a.equals(b)) {
+//                    animatronicsMap.remove(b);
+//                }
+//            }
+//        }
+//        for(Hider a : hiderMap.values()) {
+//            for(Hider b : hiderMap.values()) {
+//                if(a.equals(b)) {
+//                    hiderMap.
+//                }
+//            }
+//        }
+//    }
+
     public Animatronic getAnimatronic(Player player) {
         if(animatronicsMap.containsKey(player.getUniqueId())) {
             return animatronicsMap.get(player.getUniqueId());
@@ -248,6 +273,22 @@ public class GameManager {
     public void sendHiderTitle(String title, String subString) {
         for(UUID uuid : hiderMap.keySet()) {
             Bukkit.getPlayer(uuid).sendTitle(title, subString);
+        }
+    }
+
+    public void loadSettings() {
+        FileConfiguration config = null;
+        try {
+            config = main.getGameSettingsConfig().getConfig();
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        if(config != null) {
+            gameTime = config.getInt("Game.game-time");
+            hideTime = config.getInt("Game.hiding-time");
+            allowDupes = config.getBoolean("Game.allow-duplicates");
+            nightmare = config.getBoolean("Game.nightmare");
+            additionalCooldown = config.getInt("Game.additional-cooldown");
         }
     }
 

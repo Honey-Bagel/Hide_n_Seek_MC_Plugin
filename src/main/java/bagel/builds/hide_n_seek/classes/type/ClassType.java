@@ -3,12 +3,9 @@ package bagel.builds.hide_n_seek.classes.type;
 import bagel.builds.hide_n_seek.Main;
 import bagel.builds.hide_n_seek.classes.Animatronic;
 import bagel.builds.hide_n_seek.classes.Hider;
-import bagel.builds.hide_n_seek.classes.Team;
 import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
 
@@ -38,7 +35,8 @@ public abstract class ClassType implements Listener {
     public Animatronic getAnimatronic() { return animatronic; }
     public Hider getHider() { return hider; }
 
-    public abstract void start();
+    public abstract void start(int addCooldown);
+
     public abstract void reset();
     public void remove() {
         HandlerList.unregisterAll(this);

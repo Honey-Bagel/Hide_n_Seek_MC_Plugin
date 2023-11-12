@@ -1,0 +1,6 @@
+Game:
+  game-time: 15
+  hiding-time: 2
+  allow-duplicates: false
+  nightmare: false
+  additional-cooldown: 0

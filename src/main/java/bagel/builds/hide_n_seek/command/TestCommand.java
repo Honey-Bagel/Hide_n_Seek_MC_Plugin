@@ -18,6 +18,7 @@ public class TestCommand implements CommandExecutor {
 
         sender.sendMessage("In Vents: " + main.getGameManager().getVentManager().getVentList().get(((Player) sender).getUniqueId()));
         sender.sendMessage("State: " + main.getGameManager().getState());
+        sender.sendMessage("Team: " + main.getGameManager().getTeams().toString() + main.getGameManager().getTeam((Player) sender));
 
         return false;
     }

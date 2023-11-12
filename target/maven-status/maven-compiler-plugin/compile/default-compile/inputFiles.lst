@@ -1,6 +1,6 @@
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\classes\type\classutil\MarionetteTask.java
+E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\listener\ConnectionListener.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\manager\VentManager.java
-E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\util\SkinUtil.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\command\GuiCommand.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\command\HatTabCompleter.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\classes\type\BonnieClass.java
@@ -17,9 +17,12 @@ E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\listener\misc\SitH
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\listener\misc\FallingBlockHandler.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\GUI.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\classes\Animatronic.java
+E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\instance\LiveGame.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\classes\type\classrunnable\BonnieGlow.java
+E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\command\StartCommand.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\listener\misc\IronTDHandler.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\classes\type\FreddyClass.java
+E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\command\GameSettingsCommand.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\classes\type\ClassType.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\classes\type\classutil\LocationsFileManager.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\listener\misc\GuiListener.java
@@ -29,6 +32,7 @@ E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\classes\type\class
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\listener\misc\VentHandler.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\classes\type\classutil\TempMarionetteBoxHandler.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\command\NightVision.java
+E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\util\GameSettingsConfig.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\Main.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\classes\type\FoxyClass.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\listener\GameListener.java
@@ -37,6 +41,7 @@ E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\classes\Hider.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\command\TestCommand.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\command\HatCommand.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\command\SpeedCommand.java
+E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\listener\LiveGameListener.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\instance\Game.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\classes\TeamUI.java
 E:\plugins\Hide_n_Seek\src\main\java\bagel\builds\hide_n_seek\command\SpeedTabCompleter.java

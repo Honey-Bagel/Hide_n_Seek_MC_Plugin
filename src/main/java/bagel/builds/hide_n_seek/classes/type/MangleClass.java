@@ -19,7 +19,7 @@ public class MangleClass extends ClassType {
     }
 
     @Override
-    public void start() {
+    public void start(int addCooldown) {
 
     }
 

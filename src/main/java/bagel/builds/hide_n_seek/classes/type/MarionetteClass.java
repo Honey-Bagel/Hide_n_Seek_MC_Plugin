@@ -43,7 +43,7 @@ public class MarionetteClass extends ClassType{
     }
 
     @Override
-    public void start() {
+    public void start(int addCooldown) {
         this.locations = new ArrayList<>();
         this.mbhandler = new TempMarionetteBoxHandler(main, this);
         try {

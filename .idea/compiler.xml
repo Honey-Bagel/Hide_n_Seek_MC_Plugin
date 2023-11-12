@@ -9,5 +9,8 @@
         <module name="Hide_n_Seek" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="untitled1" target="15" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -3,16 +3,10 @@ package bagel.builds.hide_n_seek.classes.type.classutil;
 import bagel.builds.hide_n_seek.Main;
 import bagel.builds.hide_n_seek.classes.type.MarionetteClass;
 import bagel.builds.hide_n_seek.classes.type.classrunnable.MProgressDown;
-import bagel.builds.hide_n_seek.manager.GameManager;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -28,15 +22,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
-import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class MarionetteTask implements Listener {
 
@@ -89,8 +79,8 @@ public class MarionetteTask implements Listener {
     }
 
     public void barsStart() {
-        animatronicBar = Bukkit.createBossBar(ChatColor.BLUE + "Stop the hiders from winding the music box. [" + ChatColor.WHITE + progress + "%" + ChatColor.BLUE + "]", BarColor.BLUE, BarStyle.SEGMENTED_10);
-        hiderBar = Bukkit.createBossBar(ChatColor.BLUE + "Wind the music boxes before time runs out! [" + ChatColor.WHITE + progress + "%" + ChatColor.BLUE + "]", BarColor.BLUE, BarStyle.SEGMENTED_10);
+        animatronicBar = Bukkit.createBossBar(ChatColor.BLUE + "Stop the hiders from winding the music box. [" + ChatColor.WHITE + progress + "%" + ChatColor.BLUE + "]", BarColor.BLUE, BarStyle.SEGMENTED_20);
+        hiderBar = Bukkit.createBossBar(ChatColor.BLUE + "Wind the music boxes before time runs out! [" + ChatColor.WHITE + progress + "%" + ChatColor.BLUE + "]", BarColor.BLUE, BarStyle.SEGMENTED_20);
         hiderBar.setProgress(0.2);
         animatronicBar.setProgress(0.2);
 
@@ -183,7 +173,7 @@ public class MarionetteTask implements Listener {
     }
 
     public void setBarProgress(double progress) {
-        if(progress%10 == 0) {
+        if(progress%5 == 0) {
             hiderBar.setProgress(progress/100);
             animatronicBar.setProgress(progress/100);
         }

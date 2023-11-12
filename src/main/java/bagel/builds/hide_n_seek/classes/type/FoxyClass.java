@@ -2,7 +2,6 @@ package bagel.builds.hide_n_seek.classes.type;
 
 import bagel.builds.hide_n_seek.Main;
 import bagel.builds.hide_n_seek.classes.Animatronic;
-import bagel.builds.hide_n_seek.classes.Hider;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.md_5.bungee.api.ChatMessageType;
@@ -22,7 +21,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -50,7 +48,7 @@ public class FoxyClass extends ClassType{
     }
 
     @Override
-    public void start() {
+    public void start(int addCooldown) {
 //        player.setWalkSpeed(0.4f);
         this.FItem = new ItemStack(Material.RABBIT_FOOT);
         ItemMeta fMeta = FItem.getItemMeta();

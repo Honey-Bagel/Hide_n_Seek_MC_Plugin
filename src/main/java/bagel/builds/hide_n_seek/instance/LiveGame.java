@@ -1,5 +1,6 @@
 package bagel.builds.hide_n_seek.instance;
 
+import bagel.builds.hide_n_seek.Main;
 import bagel.builds.hide_n_seek.classes.Animatronic;
 import bagel.builds.hide_n_seek.classes.Hider;
 import bagel.builds.hide_n_seek.classes.Team;
@@ -8,6 +9,7 @@ import bagel.builds.hide_n_seek.manager.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -22,31 +24,36 @@ public class LiveGame {
     private HashMap<UUID, Animatronic> animatronics;
     private HashMap<UUID, Hider> aliveHiders;
     private List<BukkitTask> tasks;
-
-    private int gameTime;
+    private FileConfiguration config;
     private int hideTime;
+    private int gameTime;
 
-    public LiveGame(GameManager gameManager) {
+    public LiveGame(Main main, GameManager gameManager, int gameTime, int hideTime) {
         this.gameManager = gameManager;
         teams = gameManager.getTeams();
         animatronics = gameManager.getAnimatronicsMap();
         aliveHiders = gameManager.getHiderMap();
         tasks = new ArrayList<>();
 
-        //times = config.gettime or smth
+        this.gameTime = gameTime;
+        this.hideTime = hideTime;
     }
 
     public void start() {
         gameManager.setState(GameState.HIDING);
         teleportStart();
 
-
         tasks.add(Bukkit.getScheduler().runTaskLater(gameManager.getMain(), () -> {
-            gameManager.sendGameTitle(ChatColor.LIGHT_PURPLE + "GAME OVER : Hiders have won!", ChatColor.GRAY + "The hiders survived the required time");
+            //release hiders
+            gameManager.setState(GameState.LIVE);
+            gameManager.sendGameTitle(ChatColor.DARK_RED + "Animatronics released", ChatColor.DARK_GRAY + "Survive");
             tasks.add(Bukkit.getScheduler().runTaskLater(gameManager.getMain(), () -> {
-                gameManager.reset();
-            }, 20 * 5));
-        }, 20 * 60 * gameTime));
+                gameManager.sendGameTitle(ChatColor.LIGHT_PURPLE + "GAME OVER : Hiders have won!", ChatColor.GRAY + "The hiders survived the required time");
+                tasks.add(Bukkit.getScheduler().runTaskLater(gameManager.getMain(), () -> {
+                    gameManager.reset();
+                }, 20 * 5));
+            }, 20 * 60 * gameTime));
+        }, 20 * 60 * hideTime));
     }
 
     public void teleportStart() {

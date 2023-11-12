@@ -10,8 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
@@ -20,7 +18,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +42,7 @@ public class FreddyClass extends ClassType{
     }
 
     @Override
-    public void start() {
+    public void start(int addCooldown) {
         FItem = new ItemStack(Material.LEVER);
         ItemMeta iMeta = FItem.getItemMeta();
         iMeta.setDisplayName(ChatColor.DARK_GRAY + "Freddy's Microphone");
