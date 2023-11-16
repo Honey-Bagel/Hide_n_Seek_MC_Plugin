@@ -14,10 +14,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class GameManager {
 
@@ -149,19 +146,19 @@ public class GameManager {
 
         if(animatronic == Animatronic.MANGLE) {
             classtypes.put(player.getUniqueId(), new MangleClass(main, animatronic, player.getUniqueId()));
-            classtypes.get(player.getUniqueId()).start();
+            classtypes.get(player.getUniqueId()).start(additionalCooldown);
         } else if(animatronic.equals(Animatronic.FOXY)) {
             classtypes.put(player.getUniqueId(), new FoxyClass(main, animatronic, player.getUniqueId()));
-            classtypes.get(player.getUniqueId()).start();
+            classtypes.get(player.getUniqueId()).start(additionalCooldown);
         } else if(animatronic.equals(Animatronic.BONNIE)) {
             classtypes.put(player.getUniqueId(), new BonnieClass(main, animatronic, player.getUniqueId()));
-            classtypes.get(player.getUniqueId()).start();
+            classtypes.get(player.getUniqueId()).start(additionalCooldown);
         } else if(animatronic.equals(Animatronic.MARIONETTE)) {
             classtypes.put(player.getUniqueId(), new MarionetteClass(main, animatronic, player.getUniqueId()));
-            classtypes.get(player.getUniqueId()).start();
+            classtypes.get(player.getUniqueId()).start(additionalCooldown);
         } else if(animatronic.equals(Animatronic.FREDDY)) {
             classtypes.put(player.getUniqueId(), new FreddyClass(main, animatronic, player.getUniqueId()));
-            classtypes.get(player.getUniqueId()).start();
+            classtypes.get(player.getUniqueId()).start(additionalCooldown);
         }
     }
     public void removeAnimatronic(Player player) {
@@ -183,22 +180,19 @@ public class GameManager {
         return false;
     }
 
-//    public void removeDupes() {
-//        for(Animatronic a : animatronicsMap.values()) {
-//            for(Animatronic b: animatronicsMap.values()) {
-//                if(a.equals(b)) {
-//                    animatronicsMap.remove(b);
-//                }
-//            }
-//        }
-//        for(Hider a : hiderMap.values()) {
-//            for(Hider b : hiderMap.values()) {
-//                if(a.equals(b)) {
-//                    hiderMap.
-//                }
-//            }
-//        }
-//    }
+    public void removeDupes() {
+        for(UUID uuid1 : teams.keySet()) {
+            for(UUID uuid2 : teams.keySet()) {
+                if(!uuid1.toString().equalsIgnoreCase(uuid2.toString())) {
+                    Team one = teams.get(uuid1);
+                    Team two = teams.get(uuid2);
+                    if(one.equals(two)){
+                        removeTeam(Objects.requireNonNull(Bukkit.getPlayer(uuid2)));
+                    }
+                }
+            }
+        }
+    }
 
     public Animatronic getAnimatronic(Player player) {
         if(animatronicsMap.containsKey(player.getUniqueId())) {

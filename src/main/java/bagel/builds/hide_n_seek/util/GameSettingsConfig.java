@@ -122,11 +122,6 @@ public class GameSettingsConfig implements Listener {
 
     private List<Component> getPages(Player player) {
         TagResolver tagResolver = TagResolver.resolver(
-                TagResolver.resolver(Placeholder.component("player", Component.text(player.getName()))),
-                TagResolver.resolver("game-time", (args, context) -> {
-                    final String time = args.popOr("time expected").value();
-                    return Tag.styling(ClickEvent.runCommand("/setting setgametime" + time));
-                }),
                 TagResolver.resolver("hide-time", (args, context) -> {
                     final String time = args.popOr("time expected").value();
                     return Tag.styling(ClickEvent.runCommand("/setting sethidetime" + time));
@@ -142,6 +137,11 @@ public class GameSettingsConfig implements Listener {
                 TagResolver.resolver("cooldown", (args, context) -> {
                     final String addition = args.popOr("value expected").value();
                     return Tag.styling(ClickEvent.runCommand("/setting cooldown" + addition));
+                }),
+                TagResolver.resolver(Placeholder.component("player", Component.text(player.getName()))),
+                TagResolver.resolver("game-time", (args, context) -> {
+                    final String time = args.popOr("time expected").value();
+                    return Tag.styling(ClickEvent.runCommand("/setting setgametime" + time));
                 })
                 );
         List<String> pages = new ArrayList<>();
@@ -157,7 +157,8 @@ public class GameSettingsConfig implements Listener {
     private static List<String> page1 = List.of("""
             <gold>GameManager: <underlined><player></underlined></gold>
     
-            <black><bold>Allow Duplicates:</bold> <green><dupes: true>true</green> | <red><dupes: false>false</red>
+            <black><bold>Allow Duplicates</bold> 
+            <green><dupes: true>true</green> | <red><dupes: false>false</red>
             
             <black><bold>Hiding Time: </bold></black>
             <gray><hide-time: 2>2 <hide-time: 4>4 <hide-time: 6>6 <hide-time: 8>8 </gray>

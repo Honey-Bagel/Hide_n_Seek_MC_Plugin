@@ -2,7 +2,6 @@ package bagel.builds.hide_n_seek.classes.type.classutil;
 
 import bagel.builds.hide_n_seek.Main;
 import bagel.builds.hide_n_seek.classes.type.MarionetteClass;
-import bagel.builds.hide_n_seek.manager.GameManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,13 +10,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -89,8 +86,9 @@ public class TempMarionetteBoxHandler implements Listener {
         if(e.getBlock().getType().equals(Material.JUKEBOX)) {
 //            System.out.println("test");
             if(isMarionetteBox(e.getBlock().getLocation()) != -1) {
-                musicboxes.set("locations.musicbox-" + isMarionetteBox(e.getBlock().getLocation()), null);
+                musicboxes.set("locations.musicbox-" + (isMarionetteBox(e.getBlock().getLocation())), null);
 //                System.out.println(locations.indexOf(e.getBlock().getLocation()));
+                removeLocation(e.getBlock().getLocation());
             }
 
         }
@@ -124,6 +122,7 @@ public class TempMarionetteBoxHandler implements Listener {
 //            System.out.println("loc --------- " + loc.toString() + " --------- " + l.toVector());
 
             if(l.equals(loc)) {
+                System.out.println(locations.indexOf(l));
                 return locations.indexOf(l);
             }
         }
@@ -132,5 +131,9 @@ public class TempMarionetteBoxHandler implements Listener {
 
 
     public ItemStack getMusicBox() { return musicBox; }
+    public void removeLocation(Location loc) {
+        marionetteClass.removeLocation(loc);
+        locations.remove(loc);
+    }
 
 }

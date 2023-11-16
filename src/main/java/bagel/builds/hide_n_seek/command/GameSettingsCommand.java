@@ -66,8 +66,7 @@ public class GameSettingsCommand implements CommandExecutor {
             main.getGameSettingsConfig().saveConfig();
             sender.sendMessage("" + config.get("Game.allow-duplicates"));
             if(!value) {
-                //remove dupes
-//                main.getGameManager().removeDupes;
+                main.getGameManager().removeDupes();
             }
         } else if(args.length == 2 && args[0].equalsIgnoreCase("nightmare")) {
             boolean value;
