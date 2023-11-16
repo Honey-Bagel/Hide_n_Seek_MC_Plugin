@@ -21,7 +21,7 @@ public class MangleClass extends ClassType {
     @Override
     public void start(int addCooldown) {
 
-        skinUtil.changeSkin(Animatronic.MANGLE.getValue(), Animatronic.MANGLE.getSignature());
+        skinUtil.changeSkin(Animatronic.MANGLE.getProperty());
     }
 
     @Override

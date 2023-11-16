@@ -62,7 +62,7 @@ public class MarionetteClass extends ClassType{
         player.getInventory().addItem(MItem);
         player.getInventory().addItem(mbhandler.getMusicBox());
 
-        skinUtil.changeSkin(Animatronic.MARIONETTE.getValue(), Animatronic.MARIONETTE.getSignature());
+        skinUtil.changeSkin(Animatronic.MARIONETTE.getProperty());
     }
 
     @Override

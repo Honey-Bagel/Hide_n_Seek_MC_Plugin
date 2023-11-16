@@ -38,7 +38,7 @@ public class SkinUtil {
         this.player = player;
     }
 
-    public void changeSkin(String value, String signature) {
+    public void changeSkin(Property skinProp) {
 
         CraftPlayer craftPlayer = (CraftPlayer) player;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
@@ -47,7 +47,7 @@ public class SkinUtil {
         PropertyMap pm = profile.getProperties();
         Property property = pm.get("textures").iterator().next();
         pm.remove("textures", property);
-        pm.put("textures", new Property("textures", value, signature));
+        pm.put("textures", skinProp);
         updateSkin();
     }
 
@@ -73,6 +73,7 @@ public class SkinUtil {
         ServerPlayer serverPlayer = craftPlayer.getHandle();
         serverPlayer.connection.send(new ClientboundPlayerInfoRemovePacket(Arrays.asList(player.getUniqueId())));
         serverPlayer.connection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, serverPlayer));
+        serverPlayer.connection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED, serverPlayer));
         serverPlayer.connection.send(new ClientboundRespawnPacket(world.getHandle().getLevel().dimensionTypeId(), world.getHandle().getLevel().dimension(), world.getSeed(), getGameType(), getGameType(), false, false, Byte.parseByte("0"), Optional.empty() , 20));
 
         SynchedEntityData.DataItem<Byte> dataItem = new SynchedEntityData.DataItem<>(new EntityDataAccessor<>(17, EntityDataSerializers.BYTE), (byte) (0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));

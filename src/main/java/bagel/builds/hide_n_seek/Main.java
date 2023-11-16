@@ -58,6 +58,7 @@ public final class Main extends JavaPlugin {
         getCommand("gui").setExecutor(new GuiCommand(this));
         getCommand("vent").setExecutor(new TestCommand(this));
         getCommand("start").setExecutor(new StartCommand(this));
+        getCommand("npc").setExecutor(new NPCCommand(this));
         try {
             getCommand("setting").setExecutor(new GameSettingsCommand(this));
         } catch (UnsupportedEncodingException e) {

@@ -1,5 +1,6 @@
 package bagel.builds.hide_n_seek.classes;
 
+import com.mojang.authlib.properties.Property;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -20,6 +21,7 @@ public enum Animatronic {
     private final int guiLoc;
     private final String value;
     private final String signature;
+    private final Property property;
 
     Animatronic(String name, String description, Material material, int guiLoc, Boolean defaultUnlock, String value, String signature) {
         this.name = name;
@@ -29,6 +31,7 @@ public enum Animatronic {
         this.guiLoc = guiLoc;
         this.value = value;
         this.signature = signature;
+        this.property = new Property("textures", value, signature);
     }
 
     public String getName() { return name; }
@@ -37,6 +40,7 @@ public enum Animatronic {
     public int getGuiLoc() { return  guiLoc; }
     public Boolean getDefaultUnlock() { return defaultUnlock; }
     public String getValue() { return value; }
-    public String getSignature() { return signature; }
+    public String getSignature() { return  signature; }
+    public Property getProperty() { return property; }
 
 }

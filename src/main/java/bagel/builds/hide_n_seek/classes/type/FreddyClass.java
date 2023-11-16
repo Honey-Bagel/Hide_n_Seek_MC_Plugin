@@ -57,7 +57,7 @@ public class FreddyClass extends ClassType{
             Bukkit.getWorld(loc.getWorld().getName()).getBlockAt(loc).setType(Material.STONE_PRESSURE_PLATE);
         }
 
-        skinUtil.changeSkin(Animatronic.FREDDY.getValue(), Animatronic.FREDDY.getSignature());
+        skinUtil.changeSkin(Animatronic.FREDDY.getProperty());
     }
 
     @Override
