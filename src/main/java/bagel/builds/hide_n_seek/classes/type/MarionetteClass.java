@@ -62,6 +62,7 @@ public class MarionetteClass extends ClassType{
         player.getInventory().addItem(MItem);
         player.getInventory().addItem(mbhandler.getMusicBox());
 
+        skinUtil.changeSkin(Animatronic.MARIONETTE.getValue(), Animatronic.MARIONETTE.getSignature());
     }
 
     @Override
@@ -119,4 +120,5 @@ public class MarionetteClass extends ClassType{
     public void addLocation(Location loc) {
         locations.add(loc);
     }
+    public void removeLocation(Location loc) {locations.remove(loc); }
 }

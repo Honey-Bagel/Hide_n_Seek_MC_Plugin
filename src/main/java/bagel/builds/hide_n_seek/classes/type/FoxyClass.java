@@ -58,6 +58,8 @@ public class FoxyClass extends ClassType{
         FItem.setItemMeta(fMeta);
 
         player.getInventory().addItem(FItem);
+
+        skinUtil.changeSkin(Animatronic.FOXY.getValue(), Animatronic.FOXY.getSignature());
     }
 
     @Override

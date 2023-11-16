@@ -48,7 +48,7 @@ public class BonnieClass extends ClassType{
         BItem.setItemMeta(bMeta);
 
         player.getInventory().addItem(BItem);
-        System.out.println("test");
+        skinUtil.changeSkin(Animatronic.BONNIE.getValue(), Animatronic.BONNIE.getSignature());
     }
 
     @Override
@@ -60,7 +60,7 @@ public class BonnieClass extends ClassType{
             Btask.cancel();
         }
         super.remove();
-//        resetSkin();
+        skinUtil.resetSkin(property);
     }
 
     @EventHandler
