@@ -32,6 +32,9 @@ public class SkinUtil {
     private Collection<PotionEffect> effects;
     private Location location;
     private int slot;
+    private boolean flying;
+    private float walkspeed;
+    private float flyspeed;
 
     public SkinUtil(Main main, Player player) {
         this.main = main;
@@ -67,6 +70,9 @@ public class SkinUtil {
         effects = player.getActivePotionEffects();
         location = player.getLocation();
         slot = player.getInventory().getHeldItemSlot();
+        flying = player.isFlying();
+        flyspeed = player.getFlySpeed();
+        walkspeed = player.getWalkSpeed();
 
         CraftWorld world = (CraftWorld) location.getWorld();
         CraftPlayer craftPlayer = ((CraftPlayer) player);
@@ -93,6 +99,9 @@ public class SkinUtil {
             player.setHealth(player.getHealth()-0.0001);
             player.openInventory(player.getEnderChest());
             player.closeInventory();
+            player.setFlying(flying);
+            player.setWalkSpeed(walkspeed);
+            player.setFlySpeed(flyspeed);
         }, 2);
     }
 

@@ -22,8 +22,6 @@ public class NightVision implements CommandExecutor {
             } else {
                 player.sendMessage("nv toggled on");
                 player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, -1, 1, true,false,false));
-
-
             }
 
         return false;

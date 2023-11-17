@@ -7,6 +7,7 @@ import bagel.builds.hide_n_seek.listener.GameListener;
 import bagel.builds.hide_n_seek.listener.LiveGameListener;
 import bagel.builds.hide_n_seek.listener.misc.*;
 import bagel.builds.hide_n_seek.manager.GameManager;
+import bagel.builds.hide_n_seek.npc.NPCManager;
 import bagel.builds.hide_n_seek.util.GameSettingsConfig;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
@@ -22,6 +23,7 @@ public final class Main extends JavaPlugin {
     private LocationsFileManager locFileManager;
     private GameSettingsConfig gameSettingsConfig;
     private BukkitAudiences adventure;
+    private NPCManager npcManager;
 
     public @NonNull BukkitAudiences adventure() {
         if(this.adventure == null) {
@@ -48,6 +50,7 @@ public final class Main extends JavaPlugin {
         locFileManager = new LocationsFileManager(this);
         gameSettingsConfig = new GameSettingsConfig(this);
         gameSettingsConfig.saveDefaultConfig();
+        npcManager = new NPCManager(this);
 
         getCommand("nightvision").setExecutor(new NightVision());
         getCommand("sit").setExecutor(new SitCommand());
@@ -58,7 +61,7 @@ public final class Main extends JavaPlugin {
         getCommand("gui").setExecutor(new GuiCommand(this));
         getCommand("vent").setExecutor(new TestCommand(this));
         getCommand("start").setExecutor(new StartCommand(this));
-        getCommand("npc").setExecutor(new NPCCommand(this));
+        getCommand("push").setExecutor(new PushCommand());
         try {
             getCommand("setting").setExecutor(new GameSettingsCommand(this));
         } catch (UnsupportedEncodingException e) {
