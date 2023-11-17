@@ -52,7 +52,7 @@ public class packetHandler {
         };
 
         ChannelPipeline pipeline = getChannel(((CraftPlayer) player).getHandle().connection).pipeline();
-        pipeline.addBefore("packet_handler", player.getName() + "_tcg", channelHandler);
+        pipeline.addBefore("packet_handler", player.getName(), channelHandler);
     }
 
     public void stop(Player player) {

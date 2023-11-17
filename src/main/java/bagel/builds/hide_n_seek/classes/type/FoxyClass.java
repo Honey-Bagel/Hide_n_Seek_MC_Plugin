@@ -23,10 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,7 +34,7 @@ public class FoxyClass extends ClassType{
     private static Boolean running;
     private ItemStack FItem;
     private Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).build();
-    private BukkitTask task;
+    private List<BukkitTask> tasks;
 
     public FoxyClass(Main main, Animatronic animatronic, UUID uuid) {
         super(main, Animatronic.FOXY, uuid);
@@ -45,6 +42,7 @@ public class FoxyClass extends ClassType{
         this.uuid = uuid;
         this.player = Bukkit.getPlayer(uuid);
         this.running = false;
+        this.tasks = new ArrayList<>();
     }
 
     @Override
@@ -70,8 +68,10 @@ public class FoxyClass extends ClassType{
         if(player.getInventory().contains(FItem)) {
             player.getInventory().remove(FItem);
         }
-        if(task != null) {
-            task.cancel();
+        if(tasks != null) {
+            for(BukkitTask task : tasks) {
+                task.cancel();
+            }
         }
         super.remove();
     }
@@ -94,15 +94,17 @@ public class FoxyClass extends ClassType{
                 }
                 running = true;
                 AtomicInteger atomint = new AtomicInteger(15);
-                task = Bukkit.getScheduler().runTaskTimer(main, () -> {
+                tasks.add(Bukkit.getScheduler().runTaskTimer(main, () -> {
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§f " + atomint.getAndDecrement() + " sprint time left." ));
-                }, 0, 20);
+                }, 0, 20));
 
-                Bukkit.getScheduler().runTaskLater(main, () -> {
-                    task.cancel();
+                tasks.add(Bukkit.getScheduler().runTaskLater(main, () -> {
+                    for(BukkitTask task : tasks) {
+                        task.cancel();
+                    }
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(""));
                     player.setWalkSpeed(0.2f);
-                }, 15*20);
+                }, 15*20));
                 cooldown.put(player.getUniqueId(), System.currentTimeMillis() + 30000);
             } else {
                 long distance = cooldown.asMap().get(player.getUniqueId()) - System.currentTimeMillis();

@@ -52,6 +52,7 @@ public class NPCListener implements Listener {
                     if (!gameManager.isAnimatronicTaken(animatronic)) {
                         player.sendMessage(ChatColor.GREEN + "You selected " + animatronic.getName() + ChatColor.GREEN + ".");
                         main.getGameManager().setAnimatronic(player, animatronic);
+                        main.getGameManager().setTeam(player, Team.ANIMATRONIC);
                         player.closeInventory();
                     } else if (main.getGameManager().getAnimatronic(player) == animatronic) {
                         player.sendMessage(ChatColor.RED + "You already have this animatronic selected.");
@@ -65,6 +66,7 @@ public class NPCListener implements Listener {
                     if (!gameManager.isHiderTaken(hider)) {
                         player.sendMessage(ChatColor.GREEN + "You selected " + hider.getName() + ChatColor.GREEN + ".");
                         main.getGameManager().setHider(player, hider);
+                        main.getGameManager().setTeam(player, Team.HIDER);
                         player.closeInventory();
                     } else if (main.getGameManager().getHider(player) == hider) {
                         player.sendMessage(ChatColor.RED + "You already have this hider selected.");
