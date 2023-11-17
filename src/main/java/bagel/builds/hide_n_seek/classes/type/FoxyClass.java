@@ -43,7 +43,7 @@ public class FoxyClass extends ClassType{
         super(main, Animatronic.FOXY, uuid);
         this.main = main;
         this.uuid = uuid;
-        this.player = (Player) Bukkit.getPlayer(uuid);
+        this.player = Bukkit.getPlayer(uuid);
         this.running = false;
     }
 
@@ -70,7 +70,9 @@ public class FoxyClass extends ClassType{
         if(player.getInventory().contains(FItem)) {
             player.getInventory().remove(FItem);
         }
-        task.cancel();
+        if(task != null) {
+            task.cancel();
+        }
         super.remove();
     }
 
