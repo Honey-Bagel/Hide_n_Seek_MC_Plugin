@@ -5,7 +5,9 @@ import bagel.builds.hide_n_seek.classes.Animatronic;
 import bagel.builds.hide_n_seek.classes.Hider;
 import bagel.builds.hide_n_seek.classes.Team;
 import bagel.builds.hide_n_seek.manager.GameManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,6 +44,14 @@ public class NPCListener implements Listener {
     public void onNpcInteract(NPCEvent e) {
         List<NPC> npcList = npcManager.getNpcList();
         Player player = e.getPlayer();
+        if(player.getGameMode().equals(GameMode.CREATIVE) && e.getAttack() && player.isSneaking()) {
+            for(NPC npc : npcList) {
+                if(npc.getId() == e.getEntityID()) {
+                    Bukkit.getEntity(npc.getUuid()).remove();
+                }
+            }
+            return;
+        }
 
         for(NPC npc : npcList) {
             if(npc.getId() == e.getEntityID()) {

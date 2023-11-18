@@ -9,14 +9,17 @@ public class NPCEvent extends Event {
 
     private final Player player;
     private final int entityID;
+    private final boolean attack;
 
-    public NPCEvent(Player player, int entityID) {
+    public NPCEvent(Player player, int entityID, boolean attack) {
         this.player = player;
         this.entityID = entityID;
+        this.attack = attack;
     }
 
     public Player getPlayer() { return player; }
     public int getEntityID() { return entityID; }
+    public boolean getAttack() { return attack; }
 
     @Override
     public HandlerList getHandlers() {

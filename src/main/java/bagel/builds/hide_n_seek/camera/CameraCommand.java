@@ -19,7 +19,11 @@ public class CameraCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        player.getInventory().addItem(cameraManager.getCameraItem());
+        if(args.length == 1 && args[0].equalsIgnoreCase("get")) {
+            player.getInventory().addItem(cameraManager.getCameraItem());
+        } else if(args.length == 2 && args[0].equalsIgnoreCase("open")) {
+            cameraManager.setCamera(cameraManager.getCameras().get(Integer.parseInt(args[1]) - 1), player);
+        }
 
         return false;
     }

@@ -16,6 +16,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -85,13 +86,15 @@ public class NPCCommand implements CommandExecutor {
 
         ServerPlayer npc = new ServerPlayer(serverPlayer.getServer(), serverPlayer.serverLevel(), profile);
         if(animatronic != null) {
-            NPC myNPC = new NPC(name, npc.getId(), animatronic);
+            NPC myNPC = new NPC(name, npc.getId(), animatronic, profile.getId());
             npcManager.addNPC(myNPC);
         } else if(hider != null) {
-            NPC myNPC = new NPC(name, npc.getId(), hider);
+            NPC myNPC = new NPC(name, npc.getId(), hider, profile.getId());
             npcManager.addNPC(myNPC);
         }
         npc.setPos(player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ());
+        Entity entity = npc.getBukkitEntity();
+        entity.setPersistent(true);
 
         ServerGamePacketListenerImpl connection = serverPlayer.connection;
         connection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, npc));

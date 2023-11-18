@@ -8,26 +8,26 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CameraManager {
 
     private List<CameraClass> cameras;
     private ItemStack cameraItem;
     private NamespacedKey key;
+    private HashMap<UUID, Boolean> isInCameras;
 
     public CameraManager(Main main) {
         this.cameras = new ArrayList<>();
         this.key = new NamespacedKey(main, "camera");
         this.cameraItem = createCameraItem();
+        this.isInCameras = new HashMap<>();
 
         Bukkit.getPluginManager().registerEvents(new CameraListener(main, this), main);
         main.getCommand("camera").setExecutor(new CameraCommand(this));
@@ -64,6 +64,7 @@ public class CameraManager {
         if(cameras.contains(camera)) {
             cameras.remove(camera);
             camera.getEntity().remove();
+            camera.getDisplay().remove();
         }
     }
 
@@ -71,6 +72,10 @@ public class CameraManager {
         return cameraItem;
     }
     public NamespacedKey getKey() { return key; }
+    public HashMap<UUID, Boolean> getIsInCameras() { return isInCameras; }
+    public void getCurrentCamera(Player player) {
+
+    }
 
     public CameraClass getCameraClass(Entity entity) {
         for(CameraClass c : cameras) {
@@ -80,5 +85,13 @@ public class CameraManager {
         }
         return null;
     }
+
+    public boolean isCamera(Entity entity) {
+        if(entity.getPersistentDataContainer().has(key, PersistentDataType.BOOLEAN) && entity.getPersistentDataContainer().get(key, PersistentDataType.BOOLEAN)) {
+            return true;
+        }
+        return false;
+    }
+
 
 }

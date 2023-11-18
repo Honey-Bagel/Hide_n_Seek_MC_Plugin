@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.Field;
 
 public class packetHandler {
+    private boolean attack = false;
 
     public void inject(Player player, Main main) {
         ChannelDuplexHandler channelHandler = new ChannelDuplexHandler(){
@@ -26,24 +27,31 @@ public class packetHandler {
                   Field type = packet.getClass().getDeclaredField("b");
                   type.setAccessible(true);
                   Object typeData = type.get(packet);
-                  if(typeData.toString().split("\\$")[1].charAt(0) == 'e') { return; }
+                  if (typeData.toString().split("\\$")[1].charAt(0) != 'e') {
+                      if (typeData.toString().split("\\$")[1].charAt(0) == 'b') {
+                          attack = true;
+                      }
 
-                  try {
-                      Field hand = typeData.getClass().getDeclaredField("a");
-                      hand.setAccessible(true);
-                      if(!hand.get(typeData).toString().equals("MAIN_HAND")) { return; }
-                  } catch (NoSuchFieldException x) {
+                      try {
+                          Field hand = typeData.getClass().getDeclaredField("a");
+                          hand.setAccessible(true);
+                          if (!hand.get(typeData).toString().equals("MAIN_HAND")) {
+                              return;
+                          }
+                      } catch (NoSuchFieldException x) {
+
+                      }
+                      /*What happens with this packet here*/
+                      Field id = packet.getClass().getDeclaredField("a");
+                      id.setAccessible(true);
+                      int entityID = id.getInt(packet);
+
+
+                      Bukkit.getScheduler().runTask(main, () -> {
+                          Bukkit.getPluginManager().callEvent(new NPCEvent(player, entityID, attack));
+                      });
 
                   }
-                  /*What happens with this packet here*/
-                  Field id = packet.getClass().getDeclaredField("a");
-                  id.setAccessible(true);
-                  int entityID = id.getInt(packet);
-
-                  Bukkit.getScheduler().runTask(main, () -> {
-                      Bukkit.getPluginManager().callEvent(new NPCEvent(player, entityID));
-                  });
-
               }
               super.channelRead(ctx, rawPacket);
           }

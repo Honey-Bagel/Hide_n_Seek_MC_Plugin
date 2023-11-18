@@ -1,5 +1,6 @@
 package bagel.builds.hide_n_seek;
 
+import bagel.builds.hide_n_seek.camera.CameraManager;
 import bagel.builds.hide_n_seek.classes.type.classutil.LocationsFileManager;
 import bagel.builds.hide_n_seek.command.*;
 import bagel.builds.hide_n_seek.listener.ConnectionListener;
@@ -24,6 +25,7 @@ public final class Main extends JavaPlugin {
     private GameSettingsConfig gameSettingsConfig;
     private BukkitAudiences adventure;
     private NPCManager npcManager;
+    private CameraManager cameraManager;
 
     public @NonNull BukkitAudiences adventure() {
         if(this.adventure == null) {
@@ -51,6 +53,7 @@ public final class Main extends JavaPlugin {
         gameSettingsConfig = new GameSettingsConfig(this);
         gameSettingsConfig.saveDefaultConfig();
         npcManager = new NPCManager(this);
+        cameraManager = new CameraManager(this);
 
         getCommand("nightvision").setExecutor(new NightVision());
         getCommand("sit").setExecutor(new SitCommand());
