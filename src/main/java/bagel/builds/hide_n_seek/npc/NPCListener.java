@@ -61,8 +61,8 @@ public class NPCListener implements Listener {
                     Animatronic animatronic = npc.getAnimatronic();
                     if (!gameManager.isAnimatronicTaken(animatronic)) {
                         player.sendMessage(ChatColor.GREEN + "You selected " + animatronic.getName() + ChatColor.GREEN + ".");
-                        main.getGameManager().setAnimatronic(player, animatronic);
                         main.getGameManager().setTeam(player, Team.ANIMATRONIC);
+                        main.getGameManager().setAnimatronic(player, animatronic);
                         player.closeInventory();
                     } else if (main.getGameManager().getAnimatronic(player) == animatronic) {
                         player.sendMessage(ChatColor.RED + "You already have this animatronic selected.");

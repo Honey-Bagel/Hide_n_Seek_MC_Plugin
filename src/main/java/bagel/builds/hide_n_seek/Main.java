@@ -71,9 +71,9 @@ public final class Main extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
-        Bukkit.getPluginManager().registerEvents(new GameListener(this, gameManager), this);
         Bukkit.getPluginManager().registerEvents(new LiveGameListener(this), this);
         Bukkit.getPluginManager().registerEvents(new GameSettingsConfig(this), this);
+        Bukkit.getPluginManager().registerEvents(new GameListener(this, gameManager), this);
     }
 
 
@@ -90,4 +90,5 @@ public final class Main extends JavaPlugin {
     public GameManager getGameManager() { return gameManager; }
     public LocationsFileManager getLocFileManager() { return locFileManager; }
     public GameSettingsConfig getGameSettingsConfig() { return gameSettingsConfig; }
+    public CameraManager getCameraManager() { return cameraManager; }
 }

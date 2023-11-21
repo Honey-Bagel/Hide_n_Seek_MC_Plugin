@@ -29,6 +29,7 @@ public class GameListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         main.getGameManager().addPlayer(e.getPlayer());
+        main.getCameraManager().addPlayerCamera(e.getPlayer());
 //        setSkin(e.getPlayer());
     }
 

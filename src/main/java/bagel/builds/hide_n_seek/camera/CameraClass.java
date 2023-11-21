@@ -25,6 +25,7 @@ public class CameraClass  {
     private boolean broken;
     private NamespacedKey key;
     private Entity entity;
+    private Entity viewEntity;
     private ItemDisplay display;
 
     public CameraClass(Main main, CameraManager cameraManager, Location location) {
@@ -36,6 +37,7 @@ public class CameraClass  {
         this.key = cameraManager.getKey();
 
         createEntity();
+        createViewEntity();
         createDisplayItem();
     }
 
@@ -48,6 +50,17 @@ public class CameraClass  {
         armorStand.setGravity(false);
         armorStand.setInvulnerable(true);
         armorStand.getEquipment().setHelmet(cameraManager.getCameraItem());
+        armorStand.getPersistentDataContainer().set(key, PersistentDataType.BOOLEAN, true);
+    }
+
+    public void createViewEntity() {
+        viewEntity = Bukkit.getWorld(location.getWorld().getName()).spawnEntity(location.add(0,0.5,0), EntityType.ARMOR_STAND);
+        ArmorStand armorStand = (ArmorStand) viewEntity;
+        armorStand.setPersistent(true);
+        armorStand.setSmall(true);
+        armorStand.setVisible(false);
+        armorStand.setGravity(false);
+        armorStand.setInvulnerable(true);
         armorStand.getPersistentDataContainer().set(key, PersistentDataType.BOOLEAN, true);
     }
 
@@ -85,4 +98,5 @@ public class CameraClass  {
     public Entity getEntity() {
         return entity; }
     public ItemDisplay getDisplay() { return display; }
+    public Entity getViewEntity() { return viewEntity; }
 }

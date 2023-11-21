@@ -19,6 +19,7 @@ bagel\builds\hide_n_seek\npc\packetHandler.class
 bagel\builds\hide_n_seek\classes\Hider.class
 bagel\builds\hide_n_seek\listener\misc\GuiListener.class
 bagel\builds\hide_n_seek\npc\packetHandler$1.class
+bagel\builds\hide_n_seek\camera\PlayerCamManager.class
 bagel\builds\hide_n_seek\classes\type\MangleClass.class
 bagel\builds\hide_n_seek\classes\Animatronic.class
 bagel\builds\hide_n_seek\command\ParticlesCommand.class
@@ -52,11 +53,11 @@ bagel\builds\hide_n_seek\classes\type\BonnieClass.class
 bagel\builds\hide_n_seek\command\GameSettingsCommand.class
 bagel\builds\hide_n_seek\npc\NPC.class
 bagel\builds\hide_n_seek\manager\GameManager.class
-bagel\builds\hide_n_seek\camera\CameraViewListener.class
 bagel\builds\hide_n_seek\classes\type\classrunnable\BonnieGlow.class
 bagel\builds\hide_n_seek\event\VentEvent.class
 bagel\builds\hide_n_seek\camera\CameraListener$1.class
 bagel\builds\hide_n_seek\GUI.class
+bagel\builds\hide_n_seek\classes\type\GoldenFreddyClass.class
 bagel\builds\hide_n_seek\enums\GameState.class
 bagel\builds\hide_n_seek\Main.class
 bagel\builds\hide_n_seek\listener\misc\CarryHandler.class

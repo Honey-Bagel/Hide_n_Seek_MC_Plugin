@@ -1,14 +1,12 @@
 package bagel.builds.hide_n_seek.camera;
 
 import bagel.builds.hide_n_seek.Main;
-import bagel.builds.hide_n_seek.npc.NPCEvent;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
-import net.minecraft.network.protocol.game.ServerboundPlayerInputPacket;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
@@ -54,7 +52,7 @@ public class PacketHandler {
 
 
                         Bukkit.getScheduler().runTask(main, () -> {
-                            Bukkit.getPluginManager().callEvent(new NPCEvent(player, entityID, attack));
+
                         });
 
                     }

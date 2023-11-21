@@ -18,19 +18,32 @@ import java.util.*;
 
 public class CameraManager {
 
+    private Main main;
     private List<CameraClass> cameras;
     private ItemStack cameraItem;
     private NamespacedKey key;
-    private HashMap<UUID, Boolean> isInCameras;
+    private HashMap<UUID, PlayerCamManager> playerCameras;
 
     public CameraManager(Main main) {
+        this.main = main;
         this.cameras = new ArrayList<>();
         this.key = new NamespacedKey(main, "camera");
         this.cameraItem = createCameraItem();
-        this.isInCameras = new HashMap<>();
+        this.playerCameras = new HashMap<>();
 
         Bukkit.getPluginManager().registerEvents(new CameraListener(main, this), main);
         main.getCommand("camera").setExecutor(new CameraCommand(this));
+
+    }
+
+    public void start() {
+//        for(UUID uuid : main.getGameManager().getHiderMap().keySet()) {
+//            addPlayerCamera(Bukkit.getPlayer(uuid));
+//        }
+        for(UUID uuid : main.getGameManager().getPlayers()) {
+            System.out.println(uuid);
+            addPlayerCamera(Bukkit.getPlayer(uuid));
+        }
     }
 
     public ItemStack createCameraItem() {
@@ -59,12 +72,14 @@ public class CameraManager {
     public List<CameraClass> getCameras() { return cameras; }
     public void addCamera(CameraClass camera) {
         cameras.add(camera);
+        System.out.println("add camera: " + cameras.toString());
     }
     public void removeCamera(CameraClass camera) {
         if(cameras.contains(camera)) {
             cameras.remove(camera);
             camera.getEntity().remove();
             camera.getDisplay().remove();
+            camera.getViewEntity().remove();
         }
     }
 
@@ -72,10 +87,23 @@ public class CameraManager {
         return cameraItem;
     }
     public NamespacedKey getKey() { return key; }
-    public HashMap<UUID, Boolean> getIsInCameras() { return isInCameras; }
-    public void getCurrentCamera(Player player) {
 
+    public void addPlayerCamera(Player player) {
+        PlayerCamManager playerCam = new PlayerCamManager(main, this, player);
+        playerCameras.put(player.getUniqueId(), playerCam);
     }
+    public void removePlayerCamera(Player player) {
+        if(playerCameras.containsKey(player.getUniqueId())) {
+//            playerCameras.get(player.getUniqueId());
+            playerCameras.remove(player.getUniqueId());
+        }
+    }
+
+    public PlayerCamManager getPlayerCamManager(Player player) {
+        return playerCameras.get(player.getUniqueId());
+    }
+
+
 
     public CameraClass getCameraClass(Entity entity) {
         for(CameraClass c : cameras) {
