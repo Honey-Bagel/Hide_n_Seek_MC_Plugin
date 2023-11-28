@@ -9,6 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -17,11 +19,13 @@ public class CameraListener implements Listener {
     private ItemStack camera;
     private CameraManager cameraManager;
     private Main main;
+    private PacketHandler packetHandler;
 
     public CameraListener(Main main, CameraManager cameraManager) {
         this.cameraManager = cameraManager;
         this.camera = cameraManager.getCameraItem();
         this.main = main;
+        this.packetHandler = cameraManager.getPacketHandler();
     }
 
     @EventHandler
@@ -59,6 +63,16 @@ public class CameraListener implements Listener {
         if(e.getPlayer().isSneaking() && cameraManager.isCamera(e.getRightClicked())) {
             cameraManager.removeCamera(cameraManager.getCameraClass(e.getRightClicked()));
         }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        packetHandler.inject(e.getPlayer(), main);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        packetHandler.stop(e.getPlayer());
     }
 
 }

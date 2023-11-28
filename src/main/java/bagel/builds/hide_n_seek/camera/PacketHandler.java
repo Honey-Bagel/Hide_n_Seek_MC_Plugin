@@ -50,9 +50,8 @@ public class PacketHandler {
                         id.setAccessible(true);
                         int entityID = id.getInt(packet);
 
-
                         Bukkit.getScheduler().runTask(main, () -> {
-
+                            cameraManager.getCamManByEntityID(entityID).damagePlayer();
                         });
 
                     }

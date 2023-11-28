@@ -8,18 +8,16 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -32,12 +30,16 @@ public class PlayerCamManager implements Listener {
     private Main main;
     private CameraManager cameraManager;
     private Player player;
+    private ServerPlayer npc;
+    private Entity npcEnt;
     private List<CameraClass> nearbyCameras;
     private CameraClass curCamClass;
+    private CameraClass lastCam;
     private int currentCamera;
     private List<BukkitTask> tasks;
     private Location location;
     private GameMode gameMode;
+    private double health;
 
     public PlayerCamManager(Main main, CameraManager cameraManager, Player player) {
         this.main = main;
@@ -53,23 +55,32 @@ public class PlayerCamManager implements Listener {
             exitCamera();
         }
         this.curCamClass = camera;
-        this.location = player.getLocation();
-        this.gameMode = player.getGameMode();
+        if(this.location == null) {
+            this.location = player.getLocation();
+        }
+        if(this.gameMode == null) {
+            this.gameMode = player.getGameMode();
+        }
+        if(this.health == -1) {
+            this.health = player.getHealth();
+        }
         Bukkit.getPluginManager().registerEvents(this, main);
 
+        createDummy();
         player.setGameMode(GameMode.SPECTATOR);
         player.setSpectatorTarget(curCamClass.getViewEntity());
         player.hideEntity(main, curCamClass.getEntity());
-//        createDummy();
     }
 
     public void exitCamera() {
+        removeDummy();
         player.setGameMode(gameMode);
         player.teleport(location);
         this.gameMode = null;
         this.location = null;
         player.showEntity(main, curCamClass.getEntity());
-        //kill dummy
+        lastCam = curCamClass;
+        curCamClass = null;
 
         HandlerList.unregisterAll(this);
         cancelTasks();
@@ -81,6 +92,13 @@ public class PlayerCamManager implements Listener {
 
     public void prevCam() {
         setCamera(nearbyCameras.get(nearbyCameras.indexOf(curCamClass) - 1));
+    }
+
+    public void reset() {
+        if(curCamClass != null) {
+            exitCamera();
+        }
+        lastCam = null;
     }
 
     public List<CameraClass> getNearbyCameras() {
@@ -112,6 +130,12 @@ public class PlayerCamManager implements Listener {
         }
     }
 
+    public void damagePlayer() {
+        player.damage(1);
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_HURT, SoundCategory.PLAYERS, 1, 1);
+        player.sendHurtAnimation(0);
+    }
+
     @EventHandler
     public void onSneak(PlayerToggleSneakEvent e) {
         if(e.getPlayer().equals(player) && curCamClass != null) {
@@ -134,6 +158,17 @@ public class PlayerCamManager implements Listener {
         }
     }
 
+    @EventHandler
+    public void onClick(PlayerInteractEvent e) {
+        if(e.getPlayer().equals(player)) {
+            if(e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
+                nextCam();
+            } else if(e.getAction().equals(Action.LEFT_CLICK_AIR)) {
+                prevCam();
+            }
+        }
+    }
+
     public void createDummy() {
         boolean sneaking = player.isSneaking();
         boolean swimming = player.isSwimming();
@@ -144,12 +179,14 @@ public class PlayerCamManager implements Listener {
         GameProfile profile = new GameProfile(UUID.randomUUID(), player.getName() + "-fake");
         profile.getProperties().put("textures", craftPlayer.getProfile().getProperties().get("textures").iterator().next());
 
-        ServerPlayer npc = new ServerPlayer(serverPlayer.getServer(), serverPlayer.serverLevel(), profile);
-
+        npc = new ServerPlayer(serverPlayer.getServer(), serverPlayer.serverLevel(), profile);
 
         npc.setPos(location.getX(), location.getY(), location.getZ());
-        Entity entity = npc.getBukkitEntity();
-        entity.setPersistent(true);
+        npcEnt = npc.getBukkitEntity();
+        npcEnt.setPersistent(true);
+        Player eAsPlayer = (Player) npcEnt;
+        eAsPlayer.setSneaking(sneaking);
+        eAsPlayer.setSwimming(swimming);
 
         ServerGamePacketListenerImpl connection = serverPlayer.connection;
         connection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, npc));
@@ -173,7 +210,9 @@ public class PlayerCamManager implements Listener {
     }
 
     public void removeDummy() {
-
+        npc.kill();
     }
+
+    public Entity getEntity() { return npcEnt; }
 
 }

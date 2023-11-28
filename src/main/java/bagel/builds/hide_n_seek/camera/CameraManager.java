@@ -23,6 +23,7 @@ public class CameraManager {
     private ItemStack cameraItem;
     private NamespacedKey key;
     private HashMap<UUID, PlayerCamManager> playerCameras;
+    private PacketHandler packetHandler;
 
     public CameraManager(Main main) {
         this.main = main;
@@ -120,6 +121,17 @@ public class CameraManager {
         }
         return false;
     }
+
+    public PlayerCamManager getCamManByEntityID(int id) {
+        for(PlayerCamManager cam : playerCameras.values()) {
+            if(cam.getEntity().getEntityId() == id) {
+                return cam;
+            }
+        }
+        return null;
+    }
+
+    public PacketHandler getPacketHandler() { return packetHandler; }
 
 
 }
