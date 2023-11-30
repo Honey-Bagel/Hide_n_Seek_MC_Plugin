@@ -73,7 +73,6 @@ public class CameraManager {
     public List<CameraClass> getCameras() { return cameras; }
     public void addCamera(CameraClass camera) {
         cameras.add(camera);
-        System.out.println("add camera: " + cameras.toString());
     }
     public void removeCamera(CameraClass camera) {
         if(cameras.contains(camera)) {
