@@ -1,6 +1,7 @@
 package bagel.builds.hide_n_seek;
 
 import bagel.builds.hide_n_seek.camera.CameraManager;
+import bagel.builds.hide_n_seek.camera.camerasetup.EditCameraCommand;
 import bagel.builds.hide_n_seek.classes.type.classutil.LocationsFileManager;
 import bagel.builds.hide_n_seek.command.*;
 import bagel.builds.hide_n_seek.listener.ConnectionListener;
@@ -65,6 +66,7 @@ public final class Main extends JavaPlugin {
         getCommand("vent").setExecutor(new TestCommand(this));
         getCommand("start").setExecutor(new StartCommand(this));
         getCommand("push").setExecutor(new PushCommand());
+        getCommand("edit").setExecutor(new EditCameraCommand(this, cameraManager));
         try {
             getCommand("setting").setExecutor(new GameSettingsCommand(this));
         } catch (UnsupportedEncodingException e) {
@@ -74,6 +76,9 @@ public final class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new LiveGameListener(this), this);
         Bukkit.getPluginManager().registerEvents(new GameSettingsConfig(this), this);
         Bukkit.getPluginManager().registerEvents(new GameListener(this, gameManager), this);
+
+        Bukkit.getWorld("world").getEntities();
+        cameraManager.addCamera(Bukkit.getWorld("world").getEntities());
     }
 
 

@@ -27,6 +27,7 @@ public class CameraClass  {
     private Entity entity;
     private Entity viewEntity;
     private ItemDisplay display;
+    private NamespacedKey camTypeKey;
 
     public CameraClass(Main main, CameraManager cameraManager, Location location) {
         this.main = main;
@@ -35,10 +36,24 @@ public class CameraClass  {
         this.peopleViewing = 0;
         this.broken = false;
         this.key = cameraManager.getKey();
+        camTypeKey = cameraManager.getCamTypeKey();
 
         createEntity();
         createViewEntity();
         createDisplayItem();
+    }
+
+    public CameraClass(Main main, CameraManager cameraManager, Entity entity, Entity viewEntity, ItemDisplay display) {
+        this.main = main;
+        this.cameraManager = cameraManager;
+        this.location = location;
+        this.peopleViewing = 0;
+        this.broken = false;
+        this.key = cameraManager.getKey();
+
+        this.entity = entity;
+        this.viewEntity = viewEntity;
+        this.display = display;
     }
 
     public void createEntity() {
@@ -51,6 +66,7 @@ public class CameraClass  {
         armorStand.setInvulnerable(true);
         armorStand.getEquipment().setHelmet(cameraManager.getCameraItem());
         armorStand.getPersistentDataContainer().set(key, PersistentDataType.BOOLEAN, true);
+        armorStand.getPersistentDataContainer().set(camTypeKey, PersistentDataType.STRING, "entity");
     }
 
     public void createViewEntity() {
@@ -62,6 +78,7 @@ public class CameraClass  {
         armorStand.setGravity(false);
         armorStand.setInvulnerable(true);
         armorStand.getPersistentDataContainer().set(key, PersistentDataType.BOOLEAN, true);
+        armorStand.getPersistentDataContainer().set(camTypeKey, PersistentDataType.STRING, "view");
     }
 
     public void createDisplayItem() {
@@ -88,6 +105,7 @@ public class CameraClass  {
         Transformation transformation = display.getTransformation();
         transformation.getLeftRotation().y = 0.5f;
         display.setTransformation(transformation);
+        display.getPersistentDataContainer().set(camTypeKey, PersistentDataType.STRING, "display");
     }
 
     public Location getLocation() { return location; }

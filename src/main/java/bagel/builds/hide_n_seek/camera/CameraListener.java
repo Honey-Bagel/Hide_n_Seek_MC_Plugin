@@ -1,6 +1,7 @@
 package bagel.builds.hide_n_seek.camera;
 
 import bagel.builds.hide_n_seek.Main;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -8,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -59,6 +61,14 @@ public class CameraListener implements Listener {
     }
 
     @EventHandler
+    public void onCameraGUIClick(InventoryClickEvent e) {
+        Player player = (Player) e.getWhoClicked();
+        if(e.getView().getTitle().contains(ChatColor.BLACK + "Cameras") && e.getInventory() != null && e.getCurrentItem() != null) {
+            cameraManager.getPlayerCamManager(player).setCamera(cameraManager.getPlayerCamManager(player).getNearbyCameras().get(Integer.parseInt((e.getCurrentItem().getItemMeta().getLocalizedName().split("\""))[1])));
+        }
+    }
+
+    @EventHandler
     public void test(PlayerInteractAtEntityEvent e) {
         if(e.getPlayer().isSneaking() && cameraManager.isCamera(e.getRightClicked())) {
             cameraManager.removeCamera(cameraManager.getCameraClass(e.getRightClicked()));
@@ -67,12 +77,13 @@ public class CameraListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        packetHandler.inject(e.getPlayer(), main);
+//        packetHandler.inject(e.getPlayer(), main);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        packetHandler.stop(e.getPlayer());
+//        packetHandler.stop(e.getPlayer());
     }
+
 
 }

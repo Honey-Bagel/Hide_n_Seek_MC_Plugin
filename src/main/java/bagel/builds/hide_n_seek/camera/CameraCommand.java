@@ -21,10 +21,13 @@ public class CameraCommand implements CommandExecutor {
 
         if(args.length == 1 && args[0].equalsIgnoreCase("get")) {
             player.getInventory().addItem(cameraManager.getCameraItem());
-        } else if(args.length == 2 && args[0].equalsIgnoreCase("open")) {
-            CameraClass camClass = cameraManager.getPlayerCamManager(player).getNearbyCameras().get(Integer.parseInt(args[1]) - 1);
-
-            cameraManager.getPlayerCamManager(player).setCamera(camClass);
+        } else if(args[0].equalsIgnoreCase("open")) {
+            if(args.length == 2) {
+                CameraClass camClass = cameraManager.getPlayerCamManager(player).getNearbyCameras().get(Integer.parseInt(args[1]) - 1);
+                cameraManager.getPlayerCamManager(player).setCamera(camClass);
+            } else if(args.length == 1) {
+                new CameraGUI(cameraManager, player, cameraManager.getPlayerCamManager(player).getNearbyCameras());
+            }
         } else if(args.length == 1 && args[0].equalsIgnoreCase("next")) {
             cameraManager.getPlayerCamManager(player).nextCam();
         } else if(args.length == 1 && args[0].equalsIgnoreCase("prev")) {

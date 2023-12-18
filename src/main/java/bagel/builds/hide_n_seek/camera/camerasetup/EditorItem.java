@@ -5,11 +5,12 @@ import org.bukkit.Material;
 
 public enum EditorItem {
 
-    ROTATE_LEFT(Material.RED_DYE, ChatColor.WHITE + "Rotate Left", ChatColor.GRAY + "Rotates the camera direction to the left", 2),
-    ROTATE_RIGHT(Material.GREEN_DYE, ChatColor.WHITE + "Rotate Right", ChatColor.GRAY + "Rotates the camera direction to the right", 3),
-    ROTATE_UP(Material.BLUE_DYE, ChatColor.WHITE + "Rotate Up", ChatColor.GRAY + "Rotates the camera direction up", 5),
-    ROTATE_DOWN(Material.LIGHT_BLUE_DYE , ChatColor.WHITE + "Rotate Down", ChatColor.GRAY + "Rotates the camera direction down", 4),
-    EXIT(Material.BARRIER, ChatColor.RED + "Exit Editor", ChatColor.GRAY + "Exits the camera editor mode", 8);
+    ROTATE_LEFT(Material.RED_WOOL, ChatColor.WHITE + "Rotate Left", ChatColor.GRAY + "Rotates the camera direction to the left", 2),
+    ROTATE_RIGHT(Material.GREEN_WOOL, ChatColor.WHITE + "Rotate Right", ChatColor.GRAY + "Rotates the camera direction to the right", 3),
+    ROTATE_UP(Material.BLUE_WOOL, ChatColor.WHITE + "Rotate Up", ChatColor.GRAY + "Rotates the camera direction up", 5),
+    ROTATE_DOWN(Material.LIGHT_BLUE_WOOL , ChatColor.WHITE + "Rotate Down", ChatColor.GRAY + "Rotates the camera direction down", 4),
+    EXIT(Material.BARRIER, ChatColor.RED + "Exit Editor", ChatColor.GRAY + "Exits the camera editor mode", 8),
+    SELECT(Material.BLAZE_ROD, ChatColor.GOLD + "Camera Selector", ChatColor.GRAY + "Selects the camera to edit (Right click)", 0);
 
     private Material material;
     private String name;

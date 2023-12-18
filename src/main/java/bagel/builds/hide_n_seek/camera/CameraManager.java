@@ -1,13 +1,12 @@
 package bagel.builds.hide_n_seek.camera;
 
 import bagel.builds.hide_n_seek.Main;
+import bagel.builds.hide_n_seek.camera.camerasetup.CameraEditor;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -22,8 +21,10 @@ public class CameraManager {
     private List<CameraClass> cameras;
     private ItemStack cameraItem;
     private NamespacedKey key;
+    private NamespacedKey camTypeKey;
     private HashMap<UUID, PlayerCamManager> playerCameras;
     private PacketHandler packetHandler;
+    private HashMap<UUID, CameraEditor> cameraEditors;
 
     public CameraManager(Main main) {
         this.main = main;
@@ -31,6 +32,8 @@ public class CameraManager {
         this.key = new NamespacedKey(main, "camera");
         this.cameraItem = createCameraItem();
         this.playerCameras = new HashMap<>();
+        this.cameraEditors = new HashMap<>();
+        this.camTypeKey = new NamespacedKey(main, "CamType");
 
         Bukkit.getPluginManager().registerEvents(new CameraListener(main, this), main);
         main.getCommand("camera").setExecutor(new CameraCommand(this));
@@ -44,6 +47,16 @@ public class CameraManager {
         for(UUID uuid : main.getGameManager().getPlayers()) {
             System.out.println(uuid);
             addPlayerCamera(Bukkit.getPlayer(uuid));
+        }
+    }
+
+
+    public void checkExistingCams(List<Entity> entities) {
+        for(Entity e : entities) {
+            if(e.getPersistentDataContainer().has(key, PersistentDataType.BOOLEAN) && !cameras.contains(getCameraClass(e))) {
+                CameraClass camera = getCameraClass(e);
+                addCamera(camera);
+            }
         }
     }
 
@@ -74,6 +87,41 @@ public class CameraManager {
     public void addCamera(CameraClass camera) {
         cameras.add(camera);
     }
+
+    public void addCamera(List<Entity> e) {
+        List<Location> tempLoc = new ArrayList<>();
+        for(Entity ent : e) {
+            if(!tempLoc.contains(ent.getLocation())) {
+                tempLoc.add(ent.getLocation());
+            }
+        }
+        for(Location loc : tempLoc) {
+            Entity entity = null, viewEntity = null;
+            ItemDisplay itemDisplay = null;
+            for(Entity ent : e) {
+                if(ent.getLocation() == loc && ent.getPersistentDataContainer().has(camTypeKey, PersistentDataType.STRING)) {
+                    switch(ent.getPersistentDataContainer().get(camTypeKey, PersistentDataType.STRING)) {
+                        case ("display"):
+                            itemDisplay = (ItemDisplay) ent;
+                            break;
+                        case ("view"):
+                            viewEntity = ent;
+                            break;
+                        case ("entity"):
+                            entity = ent;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            if(entity != null && viewEntity != null && itemDisplay != null) {
+                new CameraClass(main, this, entity, viewEntity, itemDisplay);
+            }
+        }
+    }
+
+
     public void removeCamera(CameraClass camera) {
         if(cameras.contains(camera)) {
             cameras.remove(camera);
@@ -87,6 +135,7 @@ public class CameraManager {
         return cameraItem;
     }
     public NamespacedKey getKey() { return key; }
+    public NamespacedKey getCamTypeKey() { return camTypeKey; }
 
     public void addPlayerCamera(Player player) {
         PlayerCamManager playerCam = new PlayerCamManager(main, this, player);
@@ -128,6 +177,14 @@ public class CameraManager {
             }
         }
         return null;
+    }
+
+    public void addCamEditor(Player player) {
+        cameraEditors.put(player.getUniqueId(), new CameraEditor(main, this, player));
+    }
+
+    public CameraEditor getCameraEditor(Player player) {
+        return cameraEditors.get(player.getUniqueId());
     }
 
     public PacketHandler getPacketHandler() { return packetHandler; }

@@ -4,6 +4,7 @@ bagel\builds\hide_n_seek\classes\ClassUI.class
 bagel\builds\hide_n_seek\classes\type\classutil\SkinUtil.class
 bagel\builds\hide_n_seek\camera\CameraGUI.class
 bagel\builds\hide_n_seek\camera\CameraCommand.class
+bagel\builds\hide_n_seek\camera\camerasetup\CameraEditor.class
 bagel\builds\hide_n_seek\listener\misc\FallingBlockHandler.class
 bagel\builds\hide_n_seek\camera\CameraListener.class
 bagel\builds\hide_n_seek\command\NightVision.class
@@ -16,6 +17,7 @@ bagel\builds\hide_n_seek\command\StartCommand.class
 bagel\builds\hide_n_seek\command\TestCommand.class
 bagel\builds\hide_n_seek\classes\type\classutil\LocationsFileManager.class
 bagel\builds\hide_n_seek\npc\packetHandler.class
+bagel\builds\hide_n_seek\camera\camerasetup\EditorItem.class
 bagel\builds\hide_n_seek\classes\Hider.class
 bagel\builds\hide_n_seek\listener\misc\GuiListener.class
 bagel\builds\hide_n_seek\npc\packetHandler$1.class
@@ -26,6 +28,7 @@ bagel\builds\hide_n_seek\command\ParticlesCommand.class
 bagel\builds\hide_n_seek\command\HatTabCompleter.class
 bagel\builds\hide_n_seek\npc\NPCManager.class
 bagel\builds\hide_n_seek\classes\type\FreddyClass.class
+bagel\builds\hide_n_seek\camera\camerasetup\CamEditorListener.class
 bagel\builds\hide_n_seek\camera\PacketHandler.class
 bagel\builds\hide_n_seek\classes\type\FoxyClass.class
 bagel\builds\hide_n_seek\npc\NPCCommand.class
@@ -48,6 +51,7 @@ bagel\builds\hide_n_seek\camera\CameraClass.class
 bagel\builds\hide_n_seek\npc\NPCListener.class
 bagel\builds\hide_n_seek\camera\PacketHandler$1.class
 bagel\builds\hide_n_seek\classes\type\classutil\SkinUtil$1.class
+bagel\builds\hide_n_seek\camera\camerasetup\EditCameraCommand.class
 bagel\builds\hide_n_seek\listener\misc\SitHandler.class
 bagel\builds\hide_n_seek\classes\type\BonnieClass.class
 bagel\builds\hide_n_seek\command\GameSettingsCommand.class

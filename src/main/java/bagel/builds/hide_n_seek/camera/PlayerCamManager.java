@@ -16,8 +16,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityInteractEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -66,14 +68,14 @@ public class PlayerCamManager implements Listener {
         }
         Bukkit.getPluginManager().registerEvents(this, main);
 
-        createDummy();
+//        createDummy();
         player.setGameMode(GameMode.SPECTATOR);
         player.setSpectatorTarget(curCamClass.getViewEntity());
         player.hideEntity(main, curCamClass.getEntity());
     }
 
     public void exitCamera() {
-        removeDummy();
+//        removeDummy();
         player.setGameMode(gameMode);
         player.teleport(location);
         this.gameMode = null;
@@ -87,11 +89,15 @@ public class PlayerCamManager implements Listener {
     }
 
     public void nextCam() {
-        setCamera(nearbyCameras.get(nearbyCameras.indexOf(curCamClass) + 1));
+        if(nearbyCameras.indexOf(curCamClass) != nearbyCameras.size() -1) {
+            setCamera(nearbyCameras.get(nearbyCameras.indexOf(curCamClass) + 1));
+        }
     }
 
     public void prevCam() {
-        setCamera(nearbyCameras.get(nearbyCameras.indexOf(curCamClass) - 1));
+        if(nearbyCameras.indexOf(curCamClass) != 0) {
+            setCamera(nearbyCameras.get(nearbyCameras.indexOf(curCamClass) - 1));
+        }
     }
 
     public void reset() {
@@ -103,6 +109,7 @@ public class PlayerCamManager implements Listener {
 
     public List<CameraClass> getNearbyCameras() {
         List<Entity> entities = player.getNearbyEntities(50, 50, 50);
+//        cameraManager.checkExistingCams(entities);
         List<CameraClass> nearbyCameras = new ArrayList<>();
         for(CameraClass c : cameraManager.getCameras()) {
             if(entities.contains(c.getEntity())) {
@@ -115,9 +122,10 @@ public class PlayerCamManager implements Listener {
 
     public List<Entity> getNearbyCamerasAsEntity() {
         List<Entity> entities = player.getNearbyEntities(50, 50, 50);
+//        cameraManager.checkExistingCams(entities);
         List<Entity> nearbyCameras = new ArrayList<>();
         for(CameraClass c : cameraManager.getCameras()) {
-            if(entities.contains(c)) {
+            if(entities.contains(c.getEntity())) {
                 nearbyCameras.add(c.getEntity());
             }
         }
