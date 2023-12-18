@@ -98,12 +98,14 @@ public class GameManager {
             gameController = player;
             main.getGameSettingsConfig().giveBook(player);
         }
+        main.getCameraManager().addPlayerCamera(player);
     }
 
     public void removePlayer(Player player) {
         players.remove(player.getUniqueId());
         ventManager.removePlayer(player);
         removeTeam(player);
+        main.getCameraManager().removePlayerCamera(player);
         if(gameController.equals(player)) {
             gameController = Bukkit.getPlayer(players.get((int) Math.random()*players.size()));
         }

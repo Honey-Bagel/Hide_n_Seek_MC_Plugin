@@ -64,7 +64,8 @@ public class CameraListener implements Listener {
     public void onCameraGUIClick(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         if(e.getView().getTitle().contains(ChatColor.BLACK + "Cameras") && e.getInventory() != null && e.getCurrentItem() != null) {
-            cameraManager.getPlayerCamManager(player).setCamera(cameraManager.getPlayerCamManager(player).getNearbyCameras().get(Integer.parseInt((e.getCurrentItem().getItemMeta().getLocalizedName().split("\""))[1])));
+            cameraManager.getPlayerCamManager(player).setNearbyViewCams(cameraManager.getPlayerCamManager(player).getNearbyCambyType("view"));
+            cameraManager.getPlayerCamManager(player).setCamera(cameraManager.getPlayerCamManager(player).getNearbyCambyType("view").get(Integer.parseInt((e.getCurrentItem().getItemMeta().getLocalizedName().split("\""))[1])));
         }
     }
 

@@ -72,7 +72,7 @@ public class CamEditorListener implements Listener {
 
     public Entity getClosestEntity() {
 
-        List<Entity> nearbycams = cameraManager.getPlayerCamManager(player).getNearbyCamerasAsEntity();
+        List<Entity> nearbycams = cameraManager.getPlayerCamManager(player).getNearbyCambyType("entity");
         System.out.println(nearbycams.toString());
 
         Entity closestCam = cameraEditor.getCurrentSelection();

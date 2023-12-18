@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class GameListener implements Listener {
 
@@ -29,8 +30,11 @@ public class GameListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         main.getGameManager().addPlayer(e.getPlayer());
-        main.getCameraManager().addPlayerCamera(e.getPlayer());
 //        setSkin(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onLeave(PlayerQuitEvent e) {
     }
 
 //    public void setSkin(Player player) {

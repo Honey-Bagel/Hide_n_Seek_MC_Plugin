@@ -3,6 +3,7 @@ package bagel.builds.hide_n_seek.camera;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,10 +24,10 @@ public class CameraCommand implements CommandExecutor {
             player.getInventory().addItem(cameraManager.getCameraItem());
         } else if(args[0].equalsIgnoreCase("open")) {
             if(args.length == 2) {
-                CameraClass camClass = cameraManager.getPlayerCamManager(player).getNearbyCameras().get(Integer.parseInt(args[1]) - 1);
-                cameraManager.getPlayerCamManager(player).setCamera(camClass);
+                Entity viewCam = cameraManager.getPlayerCamManager(player).getNearbyCambyType("view").get(Integer.parseInt(args[1]) - 1);
+                cameraManager.getPlayerCamManager(player).setCamera(viewCam);
             } else if(args.length == 1) {
-                new CameraGUI(cameraManager, player, cameraManager.getPlayerCamManager(player).getNearbyCameras());
+                new CameraGUI(cameraManager, player, cameraManager.getPlayerCamManager(player).getNearbyCambyType("view"));
             }
         } else if(args.length == 1 && args[0].equalsIgnoreCase("next")) {
             cameraManager.getPlayerCamManager(player).nextCam();

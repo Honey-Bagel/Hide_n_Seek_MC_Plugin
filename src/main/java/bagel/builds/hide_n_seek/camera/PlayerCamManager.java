@@ -34,29 +34,41 @@ public class PlayerCamManager implements Listener {
     private Player player;
     private ServerPlayer npc;
     private Entity npcEnt;
-    private List<CameraClass> nearbyCameras;
-    private CameraClass curCamClass;
-    private CameraClass lastCam;
-    private int currentCamera;
+    private List<Entity> nearbyViewCams;
+    private List<Entity> nearbyCamEntities;
+    private Entity curViewCam;
+    private Entity curCamEntity;
+    private Entity lastViewCam;
+    private int currentCameraNum;
     private List<BukkitTask> tasks;
     private Location location;
     private GameMode gameMode;
     private double health;
+    private double charge;
 
     public PlayerCamManager(Main main, CameraManager cameraManager, Player player) {
         this.main = main;
         this.cameraManager = cameraManager;
         this.player = player;
-        this.currentCamera = -1;
-        this.nearbyCameras = new ArrayList<>();
+        this.currentCameraNum = -1;
+        this.nearbyViewCams = new ArrayList<>();
+        this.nearbyCamEntities = new ArrayList<>();
         this.tasks = new ArrayList<>();
+        //Add a decrement of charge while using cams
+        //Add a increment of charge while not in use or recharge stations
+        this.charge = 1.0;
     }
 
-    public void setCamera(CameraClass camera) {
-        if(curCamClass != null) {
+    public void destroy() {
+        HandlerList.unregisterAll(this);
+        cancelTasks();
+    }
+
+    public void setCamera(Entity viewEntity) {
+        if(curViewCam != null) {
             exitCamera();
         }
-        this.curCamClass = camera;
+        this.curViewCam = viewEntity;
         if(this.location == null) {
             this.location = player.getLocation();
         }
@@ -68,10 +80,12 @@ public class PlayerCamManager implements Listener {
         }
         Bukkit.getPluginManager().registerEvents(this, main);
 
+
 //        createDummy();
         player.setGameMode(GameMode.SPECTATOR);
-        player.setSpectatorTarget(curCamClass.getViewEntity());
-        player.hideEntity(main, curCamClass.getEntity());
+        player.setSpectatorTarget(curViewCam);
+        player.hideEntity(main, curCamEntity);
+        this.currentCameraNum = nearbyViewCams.indexOf(curViewCam);
     }
 
     public void exitCamera() {
@@ -80,57 +94,54 @@ public class PlayerCamManager implements Listener {
         player.teleport(location);
         this.gameMode = null;
         this.location = null;
-        player.showEntity(main, curCamClass.getEntity());
-        lastCam = curCamClass;
-        curCamClass = null;
+        player.showEntity(main, curCamEntity);
+        lastViewCam = curViewCam;
+        curViewCam = null;
 
         HandlerList.unregisterAll(this);
         cancelTasks();
     }
 
     public void nextCam() {
-        if(nearbyCameras.indexOf(curCamClass) != nearbyCameras.size() -1) {
-            setCamera(nearbyCameras.get(nearbyCameras.indexOf(curCamClass) + 1));
+        if(nearbyViewCams.indexOf(curViewCam) != nearbyViewCams.size() - 1) {
+            setCamera(nearbyViewCams.get(currentCameraNum + 1));
         }
     }
 
     public void prevCam() {
-        if(nearbyCameras.indexOf(curCamClass) != 0) {
-            setCamera(nearbyCameras.get(nearbyCameras.indexOf(curCamClass) - 1));
+        if(nearbyViewCams.indexOf(curViewCam) != nearbyViewCams.size() - 1) {
+            setCamera(nearbyViewCams.get(currentCameraNum - 1));
         }
     }
 
     public void reset() {
-        if(curCamClass != null) {
+        if(curViewCam != null) {
             exitCamera();
         }
-        lastCam = null;
+        lastViewCam = null;
     }
 
-    public List<CameraClass> getNearbyCameras() {
-        List<Entity> entities = player.getNearbyEntities(50, 50, 50);
-//        cameraManager.checkExistingCams(entities);
-        List<CameraClass> nearbyCameras = new ArrayList<>();
-        for(CameraClass c : cameraManager.getCameras()) {
-            if(entities.contains(c.getEntity())) {
-                nearbyCameras.add(c);
-            }
-        }
-        this.nearbyCameras = nearbyCameras;
-        return nearbyCameras;
+    public void setNearbyViewCams(List<Entity> viewCams) {
+        this.nearbyViewCams = viewCams;
     }
 
-    public List<Entity> getNearbyCamerasAsEntity() {
+    public List<Entity> getNearbyCambyType(String type) {
+        if(type != "view" || type != "entity" || type != "display") return null;
         List<Entity> entities = player.getNearbyEntities(50, 50, 50);
-//        cameraManager.checkExistingCams(entities);
-        List<Entity> nearbyCameras = new ArrayList<>();
-        for(CameraClass c : cameraManager.getCameras()) {
-            if(entities.contains(c.getEntity())) {
-                nearbyCameras.add(c.getEntity());
+        for(Entity e : entities) {
+            if(cameraManager.getEntityType(e) != type) {
+                entities.remove(e);
             }
         }
-        return nearbyCameras;
+        return entities;
     }
+
+    public boolean isInCams() {
+        if(curViewCam != null) {
+            return true;
+        } else return false;
+    }
+
 
     public void cancelTasks() {
         for(BukkitTask task : tasks) {
@@ -146,7 +157,7 @@ public class PlayerCamManager implements Listener {
 
     @EventHandler
     public void onSneak(PlayerToggleSneakEvent e) {
-        if(e.getPlayer().equals(player) && curCamClass != null) {
+        if(e.getPlayer().equals(player) && curViewCam != null) {
                 exitCamera();
                 e.setCancelled(true);
         }
@@ -154,14 +165,14 @@ public class PlayerCamManager implements Listener {
 
     @EventHandler
     public void onItemSwap(PlayerItemHeldEvent e) {
-        if(e.getPlayer().equals(player) && curCamClass != null) {
+        if(e.getPlayer().equals(player) && curViewCam != null) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
-        if((e.getPlayer().equals(player) || e.getPlayer().equals(curCamClass.getEntity()) )&& curCamClass != null) {
+        if((e.getPlayer().equals(player) || e.getPlayer().equals(curCamEntity) )&& curViewCam != null) {
             e.setCancelled(true);
         }
     }

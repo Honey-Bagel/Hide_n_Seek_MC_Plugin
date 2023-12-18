@@ -131,6 +131,12 @@ public class CameraManager {
         }
     }
 
+    public String getEntityType(Entity entity) {
+        if(entity.getPersistentDataContainer().has(camTypeKey, PersistentDataType.STRING)) {
+            return entity.getPersistentDataContainer().get(camTypeKey, PersistentDataType.STRING);
+        } else return "null";
+    }
+
     public ItemStack getCameraItem() {
         return cameraItem;
     }
@@ -144,6 +150,7 @@ public class CameraManager {
     public void removePlayerCamera(Player player) {
         if(playerCameras.containsKey(player.getUniqueId())) {
 //            playerCameras.get(player.getUniqueId());
+            getPlayerCamManager(player).destroy();
             playerCameras.remove(player.getUniqueId());
         }
     }

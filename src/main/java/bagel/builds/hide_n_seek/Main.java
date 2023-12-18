@@ -76,9 +76,6 @@ public final class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new LiveGameListener(this), this);
         Bukkit.getPluginManager().registerEvents(new GameSettingsConfig(this), this);
         Bukkit.getPluginManager().registerEvents(new GameListener(this, gameManager), this);
-
-        Bukkit.getWorld("world").getEntities();
-        cameraManager.addCamera(Bukkit.getWorld("world").getEntities());
     }
 
 
