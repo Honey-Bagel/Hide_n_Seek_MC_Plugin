@@ -6,7 +6,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.spigotmc.event.entity.EntityDismountEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 
 public class SitHandler implements Listener {
 
@@ -16,14 +16,14 @@ public class SitHandler implements Listener {
 
     //deletes "chair" armorstand entity on dismount
     @EventHandler
-    public void onVehicle(EntityDismountEvent e) {
-        if(!(e.getEntity() instanceof Player)) return;
-        Player player = (Player) e.getEntity();
-        if(e.getDismounted() instanceof ArmorStand) {
-            ArmorStand armorStand = (ArmorStand) e.getDismounted();
+    public void onVehicle(VehicleExitEvent e) {
+        if(!(e.getVehicle() instanceof Player)) return;
+        Player player = (Player) e.getVehicle();
+        if(e.getVehicle() instanceof ArmorStand) {
+            ArmorStand armorStand = (ArmorStand) e.getVehicle();
             armorStand.remove();
-            if(e.getEntity() instanceof Player) {
-                e.getEntity().teleport(e.getEntity().getLocation().add(0,0.7,0).setDirection(player.getLocation().getDirection()));
+            if(e.getVehicle() instanceof Player) {
+                e.getVehicle().teleport(e.getVehicle().getLocation().add(0,0.7,0).setDirection(player.getLocation().getDirection()));
             }
         }
     }

@@ -24,21 +24,13 @@ public final class Main extends JavaPlugin {
     private GameManager gameManager;
     private LocationsFileManager locFileManager;
     private GameSettingsConfig gameSettingsConfig;
-    private BukkitAudiences adventure;
     private NPCManager npcManager;
     private CameraManager cameraManager;
-
-    public @NonNull BukkitAudiences adventure() {
-        if(this.adventure == null) {
-            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
-        }
-        return this.adventure;
-    }
+    private BukkitAudiences adventure;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
-        this.adventure = BukkitAudiences.create(this);
         new CarryHandler(this);
         new IronTDHandler(this);
         new FallingBlockHandler(this);
@@ -47,7 +39,6 @@ public final class Main extends JavaPlugin {
         new ResourcePackHandler(this);
         new GuiListener(this);
         new VentHandler(this);
-        new ConnectionListener(this);
 
         gameManager = new GameManager(this);
         locFileManager = new LocationsFileManager(this);
@@ -73,9 +64,12 @@ public final class Main extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
+        this.adventure = BukkitAudiences.create(this);
+
         Bukkit.getPluginManager().registerEvents(new LiveGameListener(this), this);
         Bukkit.getPluginManager().registerEvents(new GameSettingsConfig(this), this);
         Bukkit.getPluginManager().registerEvents(new GameListener(this, gameManager), this);
+        Bukkit.getPluginManager().registerEvents(new ConnectionListener(this), this);
 
         Bukkit.getWorld("world").getEntities();
         cameraManager.addCamera(Bukkit.getWorld("world").getEntities());
@@ -96,4 +90,11 @@ public final class Main extends JavaPlugin {
     public LocationsFileManager getLocFileManager() { return locFileManager; }
     public GameSettingsConfig getGameSettingsConfig() { return gameSettingsConfig; }
     public CameraManager getCameraManager() { return cameraManager; }
+
+    public @NonNull BukkitAudiences adventure() {
+        if(this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventuyre when plugin was disabled");
+        }
+        return this.adventure;
+    }
 }

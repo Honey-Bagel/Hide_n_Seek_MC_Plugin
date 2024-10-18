@@ -6,10 +6,11 @@ import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -187,7 +188,8 @@ public class PlayerCamManager implements Listener {
         GameProfile profile = new GameProfile(UUID.randomUUID(), player.getName() + "-fake");
         profile.getProperties().put("textures", craftPlayer.getProfile().getProperties().get("textures").iterator().next());
 
-        npc = new ServerPlayer(serverPlayer.getServer(), serverPlayer.serverLevel(), profile);
+        ClientInformation clientInfo = new ClientInformation(serverPlayer.language, serverPlayer.requestedViewDistance(), serverPlayer.getChatVisibility(), serverPlayer.canChatInColor(),(0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40), serverPlayer.getMainArm(), serverPlayer.isTextFilteringEnabled(), serverPlayer.allowsListing());
+        npc = new ServerPlayer(serverPlayer.getServer(), serverPlayer.serverLevel(), profile, clientInfo);
 
         npc.setPos(location.getX(), location.getY(), location.getZ());
         npcEnt = npc.getBukkitEntity();
@@ -198,7 +200,7 @@ public class PlayerCamManager implements Listener {
 
         ServerGamePacketListenerImpl connection = serverPlayer.connection;
         connection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, npc));
-        connection.send(new ClientboundAddPlayerPacket(npc));
+        //connection.send(new ClientboundAddPlayerPacket(npc));
 
         SynchedEntityData.DataItem<Byte> dataItem = new SynchedEntityData.DataItem<>(new EntityDataAccessor<>(17, EntityDataSerializers.BYTE), (byte) (0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
         serverPlayer.connection.send(new ClientboundSetEntityDataPacket(npc.getBukkitEntity().getEntityId(), List.of(dataItem.value())));

@@ -68,7 +68,7 @@ public class CameraManager {
         cMeta.setLocalizedName("cameracreator");
         cMeta.getPersistentDataContainer().set(key, PersistentDataType.BOOLEAN, true);
 
-        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        GameProfile profile = new GameProfile(UUID.randomUUID(), "camera");
         profile.getProperties().put("textures", new Property("textures", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDlkZDM3MjIyNzgwOTFiZGNlMGI0NDZhZDIwYTNlZWE4YTdiMzNjZDI5N2ZlZjMzNzBmZTE1YTkyYWJjMWQ3YSJ9fX0="));
         Field field;
         try {

@@ -1,7 +1,6 @@
 package bagel.builds.hide_n_seek.listener;
 
 import bagel.builds.hide_n_seek.Main;
-import bagel.builds.hide_n_seek.classes.Team;
 import bagel.builds.hide_n_seek.manager.GameManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

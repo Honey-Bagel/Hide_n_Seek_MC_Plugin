@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.UnsupportedEncodingException;
 import java.util.*;
@@ -34,6 +35,7 @@ public class GameManager {
     private static int additionalCooldown;
     private static boolean allowDupes;
     private static boolean nightmare;
+    private List<BukkitTask> gameplayTasks;
 
     public GameManager(Main main) {
         this.main = main;
@@ -47,6 +49,7 @@ public class GameManager {
         this.ventManager = new VentManager(this);
 
         this.state = GameState.WAITING;
+        this.gameplayTasks = new ArrayList<>();
     }
 
     public void start() {
@@ -105,7 +108,10 @@ public class GameManager {
         ventManager.removePlayer(player);
         removeTeam(player);
         if(gameController.equals(player)) {
-            gameController = Bukkit.getPlayer(players.get((int) Math.random()*players.size()));
+            if(!players.isEmpty()) {
+                gameController = Bukkit.getPlayer(players.get((int) Math.random() * players.size()));
+            }
+            main.getGameSettingsConfig().takeBook(player);
         }
         if(state == GameState.LIVE || state == GameState.HIDING) {
             if(hiderMap.size() == 0) {
@@ -283,6 +289,24 @@ public class GameManager {
             allowDupes = config.getBoolean("Game.allow-duplicates");
             nightmare = config.getBoolean("Game.nightmare");
             additionalCooldown = config.getInt("Game.additional-cooldown");
+        }
+    }
+
+    public List<BukkitTask> getGameplayTasks() {
+        return gameplayTasks;
+    }
+
+    public void addGameplayTask(BukkitTask task) {
+        gameplayTasks.add(task);
+    }
+
+    public boolean removeGameplayTask(BukkitTask task) {
+        try {
+            gameplayTasks.add(task);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
         }
     }
 

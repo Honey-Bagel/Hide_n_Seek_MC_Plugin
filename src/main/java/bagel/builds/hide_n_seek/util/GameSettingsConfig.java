@@ -84,18 +84,35 @@ public class GameSettingsConfig implements Listener {
         ItemMeta bookMeta = settingBook.getItemMeta();
         bookMeta.setDisplayName(ChatColor.DARK_BLUE + "Game Settings");
         bookMeta.setLore(Arrays.asList(ChatColor.GRAY + "Change game settings and start game"));
-        bookMeta.setLocalizedName("game settings");
         settingBook.setItemMeta(bookMeta);
+        book = settingBook;
         if(!player.getInventory().contains(settingBook)) {
             player.getInventory().addItem(settingBook);
+        }
+    }
+
+    public void takeBook(Player player) {
+        ItemStack settingBook = new ItemStack(Material.BOOK);
+        ItemMeta bookMeta = settingBook.getItemMeta();
+        bookMeta.setDisplayName(ChatColor.DARK_BLUE + "Game Settings");
+        bookMeta.setLore(Arrays.asList(ChatColor.GRAY + "Change game settings and start game"));
+        settingBook.setItemMeta(bookMeta);
+        if(player.getInventory().contains(Material.BOOK)) {
+            for (ItemStack item : player.getInventory().getContents()) {
+                if (item.hasItemMeta() && ChatColor.stripColor(item.getItemMeta().getDisplayName()).equals("Game Settings")) {
+                    player.getInventory().remove(item);
+                    break;
+                }
+            }
         }
     }
 
     @EventHandler
     public void onBookInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        if(player.getInventory().getItemInMainHand().hasItemMeta() && player.getInventory().getItemInMainHand().getItemMeta().hasLocalizedName() && player.getInventory().getItemInMainHand().getItemMeta().getLocalizedName().equalsIgnoreCase("game settings") && (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+        if(player.getInventory().getItemInMainHand().hasItemMeta() && player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName() && ChatColor.stripColor(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName()).equals("Game Settings") && (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
             openBook(player);
+
         }
     }
 
@@ -104,7 +121,6 @@ public class GameSettingsConfig implements Listener {
     }
 
     public Book createBook(Player player) {
-
         Component title = Component.text("Game Settings");
         Component author = Component.text("FNAF");
         Collection<Component> page = getPages(player);
@@ -157,7 +173,7 @@ public class GameSettingsConfig implements Listener {
     private static List<String> page1 = List.of("""
             <gold>GameManager: <underlined><player></underlined></gold>
     
-            <black><bold>Allow Duplicates</bold> 
+            <black><bold>Allow Duplicates</bold></black>
             <green><dupes: true>true</green> | <red><dupes: false>false</red>
             
             <black><bold>Hiding Time: </bold></black>

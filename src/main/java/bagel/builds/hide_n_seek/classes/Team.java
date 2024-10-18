@@ -1,11 +1,9 @@
 package bagel.builds.hide_n_seek.classes;
 
-import org.bukkit.ChatColor;
-
 public enum Team {
 
-    HIDER(ChatColor.DARK_AQUA + "Hider"),
-    ANIMATRONIC(ChatColor.DARK_PURPLE + "Animatronic");
+    HIDER("Hider"),
+    ANIMATRONIC("Animatronic");
 
     private final String name;
 

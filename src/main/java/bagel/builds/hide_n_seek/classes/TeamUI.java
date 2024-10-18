@@ -20,7 +20,6 @@ public class TeamUI {
             ItemStack is = new ItemStack(Material.GRAY_DYE);
             ItemMeta isMeta = is.getItemMeta();
             isMeta.setDisplayName(team.getName());
-            isMeta.setLocalizedName(team.name());
             is.setItemMeta(isMeta);
             gui.addItem(is);
         }
@@ -28,7 +27,6 @@ public class TeamUI {
         ItemStack is = new ItemStack(Material.BARRIER);
         ItemMeta isMeta = is.getItemMeta();
         isMeta.setDisplayName(ChatColor.RED + "Remove Team");
-        isMeta.setLocalizedName("remove team");
         isMeta.setLore(Arrays.asList(ChatColor.GREEN + "Removes selected team"));
         is.setItemMeta(isMeta);
         gui.setItem(26, is);

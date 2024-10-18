@@ -6,7 +6,7 @@ import bagel.builds.hide_n_seek.classes.Hider;
 import bagel.builds.hide_n_seek.classes.type.classutil.SkinUtil;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 

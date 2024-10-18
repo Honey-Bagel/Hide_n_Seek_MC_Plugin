@@ -4,10 +4,7 @@ import bagel.builds.hide_n_seek.Main;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
-import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
-import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
+import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -15,8 +12,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
@@ -80,7 +77,8 @@ public class SkinUtil {
         serverPlayer.connection.send(new ClientboundPlayerInfoRemovePacket(Arrays.asList(player.getUniqueId())));
         serverPlayer.connection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, serverPlayer));
         serverPlayer.connection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED, serverPlayer));
-        serverPlayer.connection.send(new ClientboundRespawnPacket(world.getHandle().getLevel().dimensionTypeId(), world.getHandle().getLevel().dimension(), world.getSeed(), getGameType(), getGameType(), false, false, Byte.parseByte("0"), Optional.empty() , 20));
+        CommonPlayerSpawnInfo spawnInfo = new CommonPlayerSpawnInfo(world.getHandle().getLevel().dimensionTypeRegistration(), world.getHandle().dimension(), world.getSeed(), getGameType(), getGameType(), false, false, Optional.empty(), 20);
+        serverPlayer.connection.send(new ClientboundRespawnPacket(spawnInfo, Byte.parseByte("0")));
 
         SynchedEntityData.DataItem<Byte> dataItem = new SynchedEntityData.DataItem<>(new EntityDataAccessor<>(17, EntityDataSerializers.BYTE), (byte) (0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
         serverPlayer.connection.send(new ClientboundSetEntityDataPacket(serverPlayer.getId(), List.of(dataItem.value())));

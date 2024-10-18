@@ -9,13 +9,14 @@ import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -84,7 +85,8 @@ public class NPCCommand implements CommandExecutor {
         GameProfile profile = new GameProfile(UUID.randomUUID(), name);
         profile.getProperties().put("textures", animatronic.getProperty());
 
-        ServerPlayer npc = new ServerPlayer(serverPlayer.getServer(), serverPlayer.serverLevel(), profile);
+        ClientInformation clientInfo = new ClientInformation(serverPlayer.language, serverPlayer.requestedViewDistance(), serverPlayer.getChatVisibility(), serverPlayer.canChatInColor(),(0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40), serverPlayer.getMainArm(), serverPlayer.isTextFilteringEnabled(), serverPlayer.allowsListing());
+        ServerPlayer npc = new ServerPlayer(serverPlayer.getServer(), serverPlayer.serverLevel(), profile, clientInfo);
         if(animatronic != null) {
             NPC myNPC = new NPC(name, npc.getId(), animatronic, profile.getId());
             npcManager.addNPC(myNPC);
@@ -98,7 +100,7 @@ public class NPCCommand implements CommandExecutor {
 
         ServerGamePacketListenerImpl connection = serverPlayer.connection;
         connection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, npc));
-        connection.send(new ClientboundAddPlayerPacket(npc));
+        //connection.send(new ClientboundAddPlayerPacket(npc));
 
         SynchedEntityData.DataItem<Byte> dataItem = new SynchedEntityData.DataItem<>(new EntityDataAccessor<>(17, EntityDataSerializers.BYTE), (byte) (0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
         serverPlayer.connection.send(new ClientboundSetEntityDataPacket(npc.getBukkitEntity().getEntityId(), List.of(dataItem.value())));

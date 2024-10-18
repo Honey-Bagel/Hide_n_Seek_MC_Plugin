@@ -13,6 +13,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.Objects;
+
 public class GameListener implements Listener {
 
     private Main main;
@@ -52,7 +54,7 @@ public class GameListener implements Listener {
         if(e.getView().getTitle().contains("Class Selection") && e.getInventory() != null && e.getCurrentItem() != null) {
             e.setCancelled(true);
             if (!e.getClickedInventory().equals(player.getInventory())) {
-            if (main.getGameManager().getAnimatronicsMap().containsKey(player.getUniqueId()) && e.getCurrentItem().getItemMeta().getLocalizedName().equalsIgnoreCase("remove class")) {
+            if (main.getGameManager().getAnimatronicsMap().containsKey(player.getUniqueId()) && Objects.requireNonNull(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("remove class"))) {
                 if (gameManager.getTeams().get(player.getUniqueId()).equals(Team.ANIMATRONIC)) {
                     gameManager.removeAnimatronic(player);
                     player.sendMessage(ChatColor.GREEN + "Removed your class.");
@@ -63,7 +65,7 @@ public class GameListener implements Listener {
                     player.sendMessage(ChatColor.RED + "You don't have a class.");
                 }
             } else if (e.getCurrentItem().getType() != Material.BARRIER && gameManager.getTeams().get(player.getUniqueId()).equals(Team.ANIMATRONIC)) {
-                Animatronic animatronic = Animatronic.valueOf(e.getCurrentItem().getItemMeta().getLocalizedName());
+                Animatronic animatronic = Animatronic.valueOf(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()));
 
                 if (!gameManager.isAnimatronicTaken(animatronic)) {
                     player.sendMessage(ChatColor.GREEN + "You selected " + animatronic.getName() + ChatColor.GREEN + ".");
@@ -75,7 +77,7 @@ public class GameListener implements Listener {
                     player.sendMessage(ChatColor.RED + "The animatronic you selected is already taken.");
                 }
             } else if (gameManager.getTeams().get(player.getUniqueId()).equals(Team.HIDER)) {
-                Hider hider = Hider.valueOf(e.getCurrentItem().getItemMeta().getLocalizedName());
+                Hider hider = Hider.valueOf(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()));
 
                 if (!gameManager.isHiderTaken(hider)) {
                     player.sendMessage(ChatColor.GREEN + "You selected " + hider.getName() + ChatColor.GREEN + ".");
@@ -93,12 +95,13 @@ public class GameListener implements Listener {
 
         else if(e.getView().getTitle().contains("Team Selection") && e.getInventory() != null && e.getCurrentItem() != null) {
             e.setCancelled(true);
-            if(gameManager.getTeams().containsKey(player.getUniqueId()) && e.getCurrentItem().getItemMeta().getLocalizedName().equalsIgnoreCase("remove team")) {
+
+            if(gameManager.getTeams().containsKey(player.getUniqueId()) && ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("remove team")) {
                 gameManager.removeTeam(player);
                 player.sendMessage(ChatColor.GREEN + "Removed your team.");
                 new TeamUI(gameManager, player);
-            } else if(e.getCurrentItem().getType() != Material.BARRIER && Team.valueOf(e.getCurrentItem().getItemMeta().getLocalizedName()) != null) {
-                Team team = Team.valueOf(e.getCurrentItem().getItemMeta().getLocalizedName());
+            } else if(e.getCurrentItem().getType() != Material.BARRIER && Team.valueOf(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName())) != null) {
+                Team team = Team.valueOf(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName().toUpperCase()));
                 if(team.equals(Team.ANIMATRONIC) && gameManager.getHiderMap().containsKey(player.getUniqueId())) {
                     gameManager.removeHider(player);
                 } else if(team.equals(Team.HIDER) && gameManager.getAnimatronicsMap().containsKey(player.getUniqueId())) {
@@ -107,7 +110,7 @@ public class GameListener implements Listener {
                 if(gameManager.getTeams().containsKey(player.getUniqueId()) && gameManager.getTeam(player).equals(team)) {
                     player.sendMessage(ChatColor.RED + "You are already on this team.");
                 } else {
-                    /* MAKE THIS NOT ALWAYS SAY YOU ARE ALREADYO N THIS TEAM */
+                    /* MAKE THIS NOT ALWAYS SAY YOU ARE ALREADY N THIS TEAM */
                     gameManager.setTeam(player, team);
                     player.sendMessage(ChatColor.GREEN + "You chose the " + team.getName() + ChatColor.GREEN + " team.");
                     player.closeInventory();

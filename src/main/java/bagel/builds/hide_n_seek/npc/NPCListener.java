@@ -11,8 +11,6 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
 
@@ -30,15 +28,15 @@ public class NPCListener implements Listener {
         this.gameManager = main.getGameManager();
     }
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        packetHandler.inject(e.getPlayer(), main);
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        packetHandler.stop(e.getPlayer());
-    }
+//    @EventHandler
+//    public void onJoin(PlayerJoinEvent e) {
+//        //packetHandler.inject(e.getPlayer(), main);
+//    }
+//
+//    @EventHandler
+//    public void onQuit(PlayerQuitEvent e) {
+//        //packetHandler.stop(e.getPlayer());
+//    }
 
     @EventHandler
     public void onNpcInteract(NPCEvent e) {

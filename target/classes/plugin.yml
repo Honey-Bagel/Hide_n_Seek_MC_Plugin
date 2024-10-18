@@ -18,6 +18,7 @@ commands:
     permission: hat
   gui:
     permission: gui
+    usage: /gui <team/class>
   vent:
   start:
   setting:
